@@ -1,0 +1,9 @@
+overwrite: true
+schema: "http://localhost:5000/graphql" # URL вашего GraphQL-сервера
+documents: "src/**/*.graphql" # Путь к вашим файлам запросов GraphQL
+generates:
+  src/generated/graphql.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
