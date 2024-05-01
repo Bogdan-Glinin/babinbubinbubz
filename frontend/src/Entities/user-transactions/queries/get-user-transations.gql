@@ -1,0 +1,12 @@
+query getUserTransactions {
+  userTransactions {
+    id
+    userid
+    icon
+    category
+    name
+    amount
+    date
+    type
+  }
+}

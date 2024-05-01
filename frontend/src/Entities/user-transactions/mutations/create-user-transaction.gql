@@ -1,0 +1,3 @@
+mutation CreateUserTransaction($transactionData: TransactionInput){
+    createTransaction(transactionData: $transactionData)
+}

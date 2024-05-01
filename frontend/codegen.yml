@@ -1,9 +1,53 @@
-overwrite: true
-schema: "http://localhost:5000/graphql" # URL вашего GraphQL-сервера
-documents: "src/**/*.graphql" # Путь к вашим файлам запросов GraphQL
+schema: 'http://localhost:5000/graphql/'
+documents: 'src/**/*.gql'
+config:
+    # Работа с запросами ведется через react-hooks
+    withHooks: true
+    # Из типов для схемы исключается служебное поле __typename
+    skipTypename: true
+    # Типы генерируются на лету, без Pick - для чистоты информации по типу
+    preResolveTypes: true
 generates:
-  src/generated/graphql.tsx:
-    plugins:
-      - "typescript"
-      - "typescript-operations"
-      - "typescript-react-apollo"
+    src/shared/api/models/graphql-models.gen.ts:
+        plugins:
+            - 'typescript'
+            - add:
+                  content:
+                      - '// 🛑 NOTICE: generated files should be added to .gitignore'
+                      - '/* eslint-disable */'
+                      - 'import { Moment } from "moment"'
+        config:
+            avoidOptionals: true
+            scalars:
+                UUID: 'string'
+                Decimal: 'number'
+                Long: 'number'
+                BSONDecimal: 'string'
+                DateTime: 'Moment'
+    src/__generated__/graphql.schema.json:
+        plugins:
+            - 'introspection'
+        config:
+            minify: true
+    src/:
+        preset: near-operation-file
+        # Типы схемы и запросы - разделены
+        presetConfig:
+            extension: .gen.ts
+            baseTypesPath: Shared/api/models/graphql-models.gen.ts
+        plugins:
+            - add:
+                  content:
+                      - '// 🛑 NOTICE: generated files should be added to .gitignore'
+                      - '/* eslint-disable */'
+                      - 'import { Moment } from "moment"'
+            - typescript-operations
+            - typescript-react-apollo
+        config:
+            avoidOptionals: true
+            scalars:
+                UUID: 'string'
+                Decimal: 'number'
+                Long: 'number'
+                BSONDecimal: 'string'
+                DateTime: 'Moment'

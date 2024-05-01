@@ -1,0 +1,3 @@
+mutation CreateUser($userData: UserInput!){
+    createUser(userData: $userData)
+}
