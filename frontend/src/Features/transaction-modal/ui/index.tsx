@@ -13,8 +13,11 @@ const TransactionModal = ({
   transactionAmount,
   setAmount,
   transactionName,
+  selectCardOptions,
+  card,
+  setCard,
+  disabled
 }: any) => {
-
   return (
     <Modal
       open={isModalOpen}
@@ -26,13 +29,13 @@ const TransactionModal = ({
       <Radio.Group
         value={transactionType}
         onChange={(e) => {
-            setType(e.target.value)
-            setCategory('')
-            setName('')
+          setType(e.target.value);
+          setCategory("");
+          setName("");
         }}
       >
-        <Radio.Button value="expense">Расход</Radio.Button>
-        <Radio.Button value="income">Доход</Radio.Button>
+        <Radio.Button disabled={disabled} value="expense">Расход</Radio.Button>
+        <Radio.Button disabled={disabled} value="income">Доход</Radio.Button>
       </Radio.Group>
       <div>Категория: </div>
       <Select
@@ -41,6 +44,19 @@ const TransactionModal = ({
         onChange={(e) => setCategory(e)}
         options={transactionType === "expense" ? expenseOptions : incomeOptions}
       />
+      {transactionType === "expense" ? (
+        <div>Счет списания: </div>
+      ) : (
+        <div>Счет начисления: </div>
+      )}
+      <Select
+      disabled={disabled}
+        style={{ width: "100%" }}
+        options={selectCardOptions}
+        value={card}
+        onChange={(e) => setCard(e)}
+      />
+
       {transactionType === "expense" && (
         <>
           {" "}

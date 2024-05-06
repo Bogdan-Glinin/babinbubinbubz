@@ -1,4 +1,4 @@
-import { Button, Input } from "antd";
+import { Button, Input, message } from "antd";
 import styled from "styled-components";
 import { useGetUserTokenLazyQuery } from "../../../Entities/users/queries/get-user-token.gen";
 import { useEffect, useState } from "react";
@@ -11,7 +11,7 @@ interface SignInProps {
 }
 
 const SignIn = ({onSignChange}: SignInProps) => {
-  const [getUserToken, { data }] = useGetUserTokenLazyQuery();
+  const [getUserToken, { data, error }] = useGetUserTokenLazyQuery();
 
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");

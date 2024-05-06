@@ -11,13 +11,16 @@ export const routes = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+    errorElement: <div>Ошибка</div>,
   },
   {
     path: "/profile",
     element: <PrivateRoute element={<div>Профиль</div>} />,
+    errorElement: <div>Ошибка</div>,
   },
   {
     path: "/main",
     element: <PrivateRoute element={<MainPage />} />,
+    errorElement: <div>Ошибка</div>,
   },
 ]);

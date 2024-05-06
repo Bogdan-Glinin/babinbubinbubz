@@ -1,16 +1,28 @@
 import { useState } from "react";
 import SignIn from "../../Features/sign-in/ui";
 import SignUp from "../../Features/sign-up/ui";
+import Cookies from "js-cookie";
+import { Navigate } from "react-router-dom";
 
 const Login = () => {
+  const token = Cookies.get("token");
+
   const [isSignIn, setIsSignIn] = useState(true);
 
   const onSignChange = () => setIsSignIn(!isSignIn);
 
-  return isSignIn ? (
-    <SignIn onSignChange={onSignChange} />
-  ) : (
-    <SignUp onSignChange={onSignChange} />
+  if (token) {
+    return <Navigate to="/main" replace />;
+  }
+
+  return (
+    <div style={{width: '100vh', height: '100vh'}}>
+      {isSignIn ? (
+        <SignIn onSignChange={onSignChange} />
+      ) : (
+        <SignUp onSignChange={onSignChange} />
+      )}
+    </div>
   );
 };
 

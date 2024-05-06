@@ -9,13 +9,14 @@ const defaultOptions = {} as const;
 export type GetUserTransactionsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetUserTransactionsQuery = { userTransactions: Array<{ id: string | null, userid: string | null, icon: string | null, category: string | null, name: string | null, amount: number | null, date: string | null, type: string | null } | null> | null };
+export type GetUserTransactionsQuery = { userTransactions: Array<{ id: string | null, cardid: string | null, userid: string | null, icon: string | null, category: string | null, name: string | null, amount: number | null, date: string | null, type: string | null } | null> | null };
 
 
 export const GetUserTransactionsDocument = gql`
     query getUserTransactions {
   userTransactions {
     id
+    cardid
     userid
     icon
     category

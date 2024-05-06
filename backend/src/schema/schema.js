@@ -14,6 +14,7 @@ type User{
 type Transactions{
     id: ID
     userid: ID
+    cardid: ID
     category: String
     name: String
     amount: Float
@@ -22,10 +23,15 @@ type Transactions{
     type: String
 }
 
-type Post {
+type Cards{
     id: ID
-    title: String
-    content: String
+    userid: ID
+    name: String
+    balance: Float
+    iscredit: Boolean
+    interesrate: Float
+    limit: Float
+    dischargedate: String
 }
 
 input UserInput {
@@ -39,6 +45,7 @@ input UserInput {
 
 input TransactionInput{
     id: String
+    cardid: String!
     category: String!
     name: String!
     amount: Float!
@@ -47,18 +54,22 @@ input TransactionInput{
     type: String!
 }
 
-input PostInput {
+input CardInput{
     id: ID
-    title: String!
-    content: String!
+    name: String
+    balance: Float
+    iscredit: Boolean
+    interesrate: Float
+    limit: Float
+    dischargedate: String
 }
-
 
 type Query {
     allUsers: [User]
     user: User
     token(phoneNumber: String! password:String!): String
     userTransactions: [Transactions]
+    userCards: [Cards]
 }
 
 type Mutation {
@@ -67,6 +78,8 @@ type Mutation {
     createTransaction(transactionData: TransactionInput): String
     deleteTransaction(transactionId: ID): String
     updateTransaction(transactionData: TransactionInput): String
+    createCard(cardData: CardInput): String
+    updateCard(cardData: CardInput): String
 }
 `);
 

@@ -1,0 +1,12 @@
+query GetUserCards {
+  userCards {
+    id
+    userid
+    name
+    balance
+    iscredit
+    interesrate
+    limit
+    dischargedate
+  }
+}

@@ -5,15 +5,22 @@ const schema = require("./src/schema/schema");
 const pool = require("./src/db");
 const userResolver = require("./src/graphql/resolvers/user");
 const tokenResolver = require("./src/graphql/resolvers/token");
-const expenseResolver = require("./src/graphql/resolvers/transactions");
+const transactionsResolver = require("./src/graphql/resolvers/transactions");
+const cardsResolver = require("./src/graphql/resolvers/cards");
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
 
 const root = {
   ...userResolver,
   ...tokenResolver,
-  ...expenseResolver,
+  ...transactionsResolver,
+  ...cardsResolver,
 };
 
 app.use(

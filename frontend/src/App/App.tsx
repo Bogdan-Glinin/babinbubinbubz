@@ -23,4 +23,6 @@ export default App;
 const StyledLayout = styled.div`
   background-color: #e4e4e4;
   font-family: "Courier New", Courier, monospace;
+  height: 100vh;
+  width: 100vw;
 `;

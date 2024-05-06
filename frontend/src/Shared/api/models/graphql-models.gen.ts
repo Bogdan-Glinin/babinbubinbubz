@@ -17,12 +17,40 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type CardInput = {
+  balance: InputMaybe<Scalars['Float']['input']>;
+  dischargedate: InputMaybe<Scalars['String']['input']>;
+  id: InputMaybe<Scalars['ID']['input']>;
+  interesrate: InputMaybe<Scalars['Float']['input']>;
+  iscredit: InputMaybe<Scalars['Boolean']['input']>;
+  limit: InputMaybe<Scalars['Float']['input']>;
+  name: InputMaybe<Scalars['String']['input']>;
+};
+
+export type Cards = {
+  balance: Maybe<Scalars['Float']['output']>;
+  dischargedate: Maybe<Scalars['String']['output']>;
+  id: Maybe<Scalars['ID']['output']>;
+  interesrate: Maybe<Scalars['Float']['output']>;
+  iscredit: Maybe<Scalars['Boolean']['output']>;
+  limit: Maybe<Scalars['Float']['output']>;
+  name: Maybe<Scalars['String']['output']>;
+  userid: Maybe<Scalars['ID']['output']>;
+};
+
 export type Mutation = {
+  createCard: Maybe<Scalars['String']['output']>;
   createTransaction: Maybe<Scalars['String']['output']>;
   createUser: Maybe<Scalars['String']['output']>;
   deleteTransaction: Maybe<Scalars['String']['output']>;
   onboardingUser: Maybe<Scalars['String']['output']>;
+  updateCard: Maybe<Scalars['String']['output']>;
   updateTransaction: Maybe<Scalars['String']['output']>;
+};
+
+
+export type MutationCreateCardArgs = {
+  cardData: InputMaybe<CardInput>;
 };
 
 
@@ -46,26 +74,20 @@ export type MutationOnboardingUserArgs = {
 };
 
 
+export type MutationUpdateCardArgs = {
+  cardData: InputMaybe<CardInput>;
+};
+
+
 export type MutationUpdateTransactionArgs = {
   transactionData: InputMaybe<TransactionInput>;
-};
-
-export type Post = {
-  content: Maybe<Scalars['String']['output']>;
-  id: Maybe<Scalars['ID']['output']>;
-  title: Maybe<Scalars['String']['output']>;
-};
-
-export type PostInput = {
-  content: Scalars['String']['input'];
-  id: InputMaybe<Scalars['ID']['input']>;
-  title: Scalars['String']['input'];
 };
 
 export type Query = {
   allUsers: Maybe<Array<Maybe<User>>>;
   token: Maybe<Scalars['String']['output']>;
   user: Maybe<User>;
+  userCards: Maybe<Array<Maybe<Cards>>>;
   userTransactions: Maybe<Array<Maybe<Transactions>>>;
 };
 
@@ -77,6 +99,7 @@ export type QueryTokenArgs = {
 
 export type TransactionInput = {
   amount: Scalars['Float']['input'];
+  cardid: Scalars['String']['input'];
   category: Scalars['String']['input'];
   date: Scalars['String']['input'];
   icon: Scalars['String']['input'];
@@ -87,6 +110,7 @@ export type TransactionInput = {
 
 export type Transactions = {
   amount: Maybe<Scalars['Float']['output']>;
+  cardid: Maybe<Scalars['ID']['output']>;
   category: Maybe<Scalars['String']['output']>;
   date: Maybe<Scalars['String']['output']>;
   icon: Maybe<Scalars['String']['output']>;

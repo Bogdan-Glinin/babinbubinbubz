@@ -1,10 +1,14 @@
-import { Spin, Button, Tooltip } from "antd";
+import { Spin, Button, Tooltip, Carousel } from "antd";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import BaseCard from "../../Shared/ui/base-card";
 import EChartsReact from "echarts-for-react";
-import { FrownOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  FrownOutlined,
+  PlusOutlined,
+  WarningOutlined,
+} from "@ant-design/icons";
 import IncomeCard from "../../Features/income-card/ui";
 import ExpenseCard from "../../Features/expense-card/ui";
 import {
@@ -15,6 +19,12 @@ import { useCreateUserTransactionMutation } from "../../Entities/user-transactio
 import { useDeleteUserTransactionMutation } from "../../Entities/user-transactions/mutations/delete-user-transaction.gen";
 import TransactionModal from "../../Features/transaction-modal/ui";
 import { getCategoryIcon } from "../../Features/transaction-modal/lib/get-category-icon";
+import {
+  GetUserCardsDocument,
+  useGetUserCardsQuery,
+} from "../../Entities/cards/queries/get-user-cards.gen";
+import { useUpdateUserCardMutation } from "../../Entities/cards/mutations/update-user-card.gen";
+import "./style.css";
 
 const Main = () => {
   // const [isModalOpen, setIsModalOpen] = useState(true);
@@ -135,8 +145,10 @@ const Main = () => {
   const { data: userTransactions, loading } = useGetUserTransactionsQuery();
   const [createTransaction, {}] = useCreateUserTransactionMutation();
   const [deleteTransaction, {}] = useDeleteUserTransactionMutation();
+  const { data: userCards, loading: cardsLoading } = useGetUserCardsQuery();
+  const [updateCard, {}] = useUpdateUserCardMutation();
 
-  const option = {
+  const expenseOption = {
     tooltip: {
       trigger: "item",
     },
@@ -189,32 +201,143 @@ const Main = () => {
               return acc;
             }, [])
           : [],
-        // [
-        //   { value: 1048, name: "Транспорт" },
-        //   { value: 735, name: "Рестораны и кафе" },
-        //   { value: 580, name: "Продукты" },
-        //   { value: 484, name: "Путешествия" },
-        //   { value: 300, name: "Красота и здоровье" },
-        // ],
+      },
+    ],
+  };
+
+  const incomeOptions = {
+    tooltip: {
+      trigger: "item",
+    },
+    legend: {
+      top: "5%",
+      left: "center",
+    },
+    series: [
+      {
+        type: "pie",
+        radius: ["40%", "70%"],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 10,
+          borderColor: "#fff",
+          borderWidth: 2,
+        },
+        label: {
+          show: false,
+          position: "center",
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 40,
+            fontWeight: "bold",
+          },
+        },
+        labelLine: {
+          show: false,
+        },
+        data: userTransactions?.userTransactions
+          ? //@ts-ignore
+            userTransactions?.userTransactions.reduce((acc, curr) => {
+              //@ts-ignore
+              if (curr.type === "income") {
+                //@ts-ignore
+                const existingCategory = acc.find(
+                  //@ts-ignore
+                  (item) => item?.name === curr?.category
+                );
+                if (existingCategory) {
+                  //@ts-ignore
+                  existingCategory.value += curr.amount;
+                } else {
+                  //@ts-ignore
+                  acc.push({ name: curr.category, value: curr.amount });
+                }
+              }
+              return acc;
+            }, [])
+          : [],
+      },
+    ],
+  };
+
+  const totalMoneyOption = {
+    tooltip: {
+      trigger: "item",
+    },
+    legend: {
+      top: "5%",
+      left: "center",
+    },
+    series: [
+      {
+        type: "pie",
+        radius: ["40%", "70%"],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 10,
+          borderColor: "#fff",
+          borderWidth: 2,
+        },
+        label: {
+          show: false,
+          position: "center",
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 40,
+            fontWeight: "bold",
+          },
+        },
+        labelLine: {
+          show: false,
+        },
+        data: userCards?.userCards
+          ? userCards?.userCards?.map((e: any) => {
+              if (!e.iscredit) {
+                return {
+                  name: e?.name,
+                  value: e?.balance,
+                };
+              }
+            })
+          : [],
       },
     ],
   };
 
   const [totalExpense, setTotalExpense] = useState(0);
+  const [totalIncome, setTotalIncome] = useState(0);
+  const [totalMoney, setTotalMoney] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [type, setType] = useState("expense");
   const [category, setCategory] = useState("");
   const [name, setName] = useState("");
   const [amount, setAmount] = useState(0);
+  const [card, setCard] = useState("");
+
+  const findCard = (data: any) => {
+    return data.find((obj: any) => obj.id === card);
+  };
+
+  const findCardTransaction = (data: any, cardid: any) => {
+    return data.find((obj: any) => obj.id === cardid);
+  };
+  const findTransaction = (data: any, id: any) => {
+    return data.find((obj: any) => obj.id === id);
+  };
 
   const setStateNull = () => {
     setType("expense");
     setCategory("");
     setName("");
     setAmount(0);
+    setCard("");
   };
 
-  const deleteUserTransaction = (id: string) => {
+  const deleteUserTransaction = (id: any, cardid: any) => {
     deleteTransaction({
       variables: {
         transactionId: id,
@@ -225,6 +348,50 @@ const Main = () => {
         },
       ],
     });
+    const transactionCard = findCardTransaction(userCards?.userCards, cardid);
+    const currentTransaction = findTransaction(
+      userTransactions?.userTransactions,
+      id
+    );
+    if (currentTransaction.type === "expense") {
+      updateCard({
+        variables: {
+          cardData: {
+            balance: transactionCard.balance + currentTransaction.amount,
+            id: transactionCard.id,
+            dischargedate: transactionCard.dischargedate,
+            interesrate: transactionCard.interesrate,
+            iscredit: transactionCard.iscredit,
+            limit: transactionCard.limit,
+            name: transactionCard.name,
+          },
+        },
+        refetchQueries: [
+          {
+            query: GetUserCardsDocument,
+          },
+        ],
+      });
+    } else {
+      updateCard({
+        variables: {
+          cardData: {
+            balance: transactionCard.balance - currentTransaction.amount,
+            id: transactionCard.id,
+            dischargedate: transactionCard.dischargedate,
+            interesrate: transactionCard.interesrate,
+            iscredit: transactionCard.iscredit,
+            limit: transactionCard.limit,
+            name: transactionCard.name,
+          },
+        },
+        refetchQueries: [
+          {
+            query: GetUserCardsDocument,
+          },
+        ],
+      });
+    }
   };
 
   const createUserTransaction = () => {
@@ -238,6 +405,7 @@ const Main = () => {
           type,
           icon: getCategoryIcon(category),
           date: moment().format("DD.MM.YYYY HH:mm"),
+          cardid: card ? card : "",
         },
       },
       refetchQueries: [
@@ -246,6 +414,48 @@ const Main = () => {
         },
       ],
     });
+    if (type === "expense") {
+      const currentCard = findCard(userCards?.userCards);
+      console.log(currentCard.iscredit);
+      updateCard({
+        variables: {
+          cardData: {
+            id: currentCard.id,
+            balance: currentCard.balance - amount,
+            name: currentCard.name,
+            dischargedate: currentCard.dischargedate,
+            interesrate: currentCard.dischargedate,
+            iscredit: currentCard.iscredit,
+            limit: currentCard.limit,
+          },
+        },
+        refetchQueries: [
+          {
+            query: GetUserCardsDocument,
+          },
+        ],
+      });
+    } else {
+      const currentCard = findCard(userCards?.userCards);
+      updateCard({
+        variables: {
+          cardData: {
+            id: currentCard.id,
+            balance: currentCard.balance + amount,
+            name: currentCard.name,
+            dischargedate: currentCard.dischargedate,
+            interesrate: currentCard.dischargedate,
+            iscredit: currentCard.iscredit,
+            limit: currentCard.limit,
+          },
+        },
+        refetchQueries: [
+          {
+            query: GetUserCardsDocument,
+          },
+        ],
+      });
+    }
     setStateNull();
     setIsModalOpen(false);
   };
@@ -255,16 +465,35 @@ const Main = () => {
     setIsModalOpen(false);
   };
 
-  useEffect(() => {
-    let total = 0;
-    if (option?.series[0]?.data) {
-      option.series[0].data.map((e: any) => (total += e.value));
-      setTotalExpense(total);
-    }
-  }, [option]);
+  const selectCardOptions = userCards?.userCards?.map((e) => ({
+    value: e?.id,
+    label: `${e?.name} (${e?.balance} руб.)`,
+  }));
 
-  if (loading) {
-    return <Spin size="large" />;
+  useEffect(() => {
+    let totalExpense = 0;
+    let totalIncome = 0;
+    let totalMoney = 0;
+    if (expenseOption?.series[0]?.data) {
+      expenseOption.series[0].data.map((e: any) => (totalExpense += e.value));
+      setTotalExpense(totalExpense);
+    }
+    if (incomeOptions?.series[0]?.data) {
+      incomeOptions.series[0].data.map((e: any) => (totalIncome += e.value));
+      setTotalIncome(totalIncome);
+    }
+    if (totalMoneyOption?.series[0]?.data) {
+      totalMoneyOption.series[0].data.map((e: any) => (totalMoney += e.value));
+      setTotalMoney(totalMoney);
+    }
+  }, [expenseOption, incomeOptions, totalMoney]);
+
+  if (loading || cardsLoading) {
+    return (
+      <div style={{ width: "100vh", height: "100vh" }}>
+        <StyledSpin size="large" />
+      </div>
+    );
   }
 
   return (
@@ -272,18 +501,60 @@ const Main = () => {
       <div style={{ height: "75px" }}>Хэдер</div>
       <Container>
         <ChartCard style={{ gridRow: "span 1", gridColumn: "span 1" }}>
-          <Title>График расходов</Title>
-          <EChartsReact option={option} />
-          <div>
-            Всего расходов:{" "}
-            <span style={{ fontWeight: 700 }}>{totalExpense}</span>Р
-          </div>
+          <Carousel style={{ width: 500 }}>
+            <div>
+              <Title>График расходов</Title>
+              <EChartsReact option={expenseOption} />
+              <div>
+                Всего расходов:{" "}
+                <span style={{ fontWeight: 700 }}>{totalExpense}</span>Р
+              </div>
+            </div>
+            <div>
+              <Title>График доходов</Title>
+              <EChartsReact option={incomeOptions} />
+              <div>
+                Всего доходов:{" "}
+                <span style={{ fontWeight: 700 }}>{totalIncome}</span>Р
+              </div>
+            </div>
+            <div>
+              <Title>График средств</Title>
+              <EChartsReact option={totalMoneyOption} />
+              <div>
+                Всего средств <Tooltip title="Без учета кредиток">*</Tooltip> :{" "}
+                <span style={{ fontWeight: 700 }}>{totalMoney}</span>Р
+              </div>
+            </div>
+          </Carousel>
         </ChartCard>
         <RecommendationsCard>
-          <Title>Рекомендации</Title>
+          <Title>Статистика и советы</Title>
+          <div>
+            <div style={{fontWeight: 600, fontSize: 20}}>Ваши счета</div>
+            <div style={{display: 'flex', width: '20vw'}}>
+            {userCards &&
+              userCards?.userCards?.map((e) => (
+                <div style={{padding: 10, borderRadius: 15, border: '1px solid #6b6b6b', margin: 10} }>
+                  <div>{e?.name}</div>
+                  <div>{e?.balance} руб.</div>
+                </div>
+              ))}
+            </div>  
+          </div>
+          <div>
+            {totalExpense > totalIncome ? (
+              <div>
+                <WarningOutlined style={{ color: "red" }} /> Ваши расходы
+                превышают доходы
+              </div>
+            ) : (
+              <div>Ваш финансовый баланс в норме</div>
+            )}
+          </div>
         </RecommendationsCard>
         <TransactionsCard>
-          <Title style={{ marginBottom: "2vh" }}>Транзакции</Title>
+          <Title style={{ marginBottom: "2vh" }}>Операции</Title>
           <div
             style={{
               position: "absolute",
@@ -310,6 +581,10 @@ const Main = () => {
             transactionAmount={amount}
             setAmount={setAmount}
             transactionName={name}
+            selectCardOptions={selectCardOptions}
+            card={card}
+            setCard={setCard}
+            disabled={false}
           />
           {userTransactions?.userTransactions?.length ? (
             userTransactions?.userTransactions?.map((e) => {
@@ -322,10 +597,16 @@ const Main = () => {
                     date={e.date}
                     type={e.type}
                     amount={e.amount}
-                    deleteTransaction={() =>
-                      deleteUserTransaction(e.id ? e.id : "")
+                    cardid={e.cardid}
+                    deleteTransaction={(cardid) =>
+                      deleteUserTransaction(e.id ? e.id : "", cardid)
                     }
                     id={e.id}
+                    selectCardOptions={selectCardOptions}
+                    transactionCardData={findCardTransaction(
+                      userCards?.userCards,
+                      e.cardid
+                    )}
                   />
                 );
               } else if (e?.type === "income") {
@@ -337,10 +618,16 @@ const Main = () => {
                     date={e.date}
                     type={e.type}
                     amount={e.amount}
-                    deleteTransaction={() =>
-                      deleteUserTransaction(e.id ? e.id : "")
+                    deleteTransaction={(cardid) =>
+                      deleteUserTransaction(e.id ? e.id : "", cardid)
                     }
                     id={e.id}
+                    cardid={e.cardid}
+                    selectCardOptions={selectCardOptions}
+                    transactionCardData={findCardTransaction(
+                      userCards?.userCards,
+                      e.cardid
+                    )}
                   />
                 );
               }
@@ -357,7 +644,7 @@ const Main = () => {
                 alignItems: "center",
               }}
             >
-              <div>Транзакции отсуствуют</div>
+              <div>Операции отсуствуют</div>
               <FrownOutlined style={{ fontSize: "32px" }} />
             </div>
           )}
@@ -402,12 +689,13 @@ const Container = styled.div`
   grid-template-rows: 1fr 2fr;
   height: 100%;
 `;
-// const StyledSpin = styled(Spin)`
-//   position: absolute;
-//   top: 50%;
-//   left: 50%;
-//   transform: translate(-50%, -50%);
-// `;
+
+const StyledSpin = styled(Spin)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
 
 // const StyledSelect = styled(Select)`
 //   width: 100%;

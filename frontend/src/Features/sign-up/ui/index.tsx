@@ -20,8 +20,8 @@ const SignUp = ({ onSignChange }: SignUpProps) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [passwordRepeatVisible, setPasswordRepeatVisible] = useState(false);
 
-  const [createUser, { data }] = useCreateUserMutation();
-
+  const [createUser, { data, error }] = useCreateUserMutation();
+  
   useEffect(() => {
     if (data?.createUser) {
       Cookies.set("token", data?.createUser);

@@ -13,6 +13,8 @@ import { useState } from "react";
 import TransactionModal from "../../transaction-modal/ui";
 import { getCardIcon } from "../../expense-card/lib/get-card-icon";
 import { getCategoryIcon } from "../../transaction-modal/lib/get-category-icon";
+import { useUpdateUserCardMutation } from "../../../Entities/cards/mutations/update-user-card.gen";
+import { GetUserCardsDocument } from "../../../Entities/cards/queries/get-user-cards.gen";
 
 interface IncomeProps {
   category: string | null;
@@ -20,9 +22,12 @@ interface IncomeProps {
   name: string | null;
   date: string | null;
   amount: number | null;
-  deleteTransaction: () => void;
+  deleteTransaction: (cardid: string | null) => void;
   type: string | null;
   id: string | null;
+  cardid: string | null
+  selectCardOptions: any
+  transactionCardData: any
 }
 
 const IncomeCard = ({
@@ -34,14 +39,19 @@ const IncomeCard = ({
   amount,
   type,
   id,
+  cardid,
+  selectCardOptions,
+  transactionCardData
 }: IncomeProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [transactionType, setType] = useState(type);
   const [transactionCategory, setCategory] = useState(category);
   const [transactionName, setName] = useState(name);
   const [transactionAmount, setAmount] = useState(amount);
+  const [transactionCard, setCard] = useState(cardid);
 
   const [updateTransaction, {}] = useUpdateUserTransactionMutation();
+  const [updateCard, {}] = useUpdateUserCardMutation();
 
   const updateUserTransaction = () => {
     updateTransaction({
@@ -54,11 +64,33 @@ const IncomeCard = ({
           icon: getCategoryIcon(transactionCategory),
           id: id ? id : "",
           name: transactionName ? transactionName : "",
+          cardid: cardid ? cardid : "",
         },
       },
       refetchQueries: [
         {
           query: GetUserTransactionsDocument,
+        },
+      ],
+    });
+    updateCard({
+      variables: {
+        cardData: {
+          name: transactionCardData.name,
+          balance:
+            transactionCardData.balance -
+            (amount ? amount : 0) +
+            (transactionAmount ? transactionAmount : 0),
+          dischargedate: transactionCardData.dischargedate,
+          id: transactionCardData.id,
+          interesrate: transactionCardData.interesrate,
+          iscredit: transactionCardData.iscredit,
+          limit: transactionCardData.limit,
+        },
+      },
+      refetchQueries: [
+        {
+          query: GetUserCardsDocument,
         },
       ],
     });
@@ -103,12 +135,12 @@ const IncomeCard = ({
         <div style={{ width: 190 }}>
           <div style={{ fontWeight: 600, marginBottom: "1vh" }}>{category}</div>
           <div>{date}</div>
-          <div>+{amount ? amount.toString() : 0} руб</div>
+          <div>{transactionCardData.name} +{amount ? amount.toString() : 0} руб</div>
         </div>
       </div>
       <div style={{ marginLeft: "10vh" }}>
         <Tooltip title="Удалить">
-          <Button type="text" onClick={deleteTransaction}>
+          <Button type="text" onClick={() => deleteTransaction(cardid)}>
             <MinusSquareOutlined style={{ fontSize: 24 }} />
           </Button>
         </Tooltip>
@@ -135,6 +167,10 @@ const IncomeCard = ({
         transactionAmount={transactionAmount}
         setAmount={setAmount}
         transactionName={transactionName}
+        selectCardOptions={selectCardOptions}
+        card={transactionCard}
+        setCard={setCard}
+        disabled={true}
       />
     </div>
   );
