@@ -70,7 +70,7 @@ export type MutationDeleteTransactionArgs = {
 
 
 export type MutationOnboardingUserArgs = {
-  userData: InputMaybe<UserInput>;
+  data: InputMaybe<OnboadringType>;
 };
 
 
@@ -86,6 +86,7 @@ export type MutationUpdateTransactionArgs = {
 export type Query = {
   allUsers: Maybe<Array<Maybe<User>>>;
   token: Maybe<Scalars['String']['output']>;
+  transactionForChart: Maybe<TransactionForChart>;
   user: Maybe<User>;
   userCards: Maybe<Array<Maybe<Cards>>>;
   userTransactions: Maybe<Array<Maybe<Transactions>>>;
@@ -122,19 +123,35 @@ export type Transactions = {
 
 export type User = {
   id: Maybe<Scalars['ID']['output']>;
-  isOnboardingComplete: Maybe<Scalars['Boolean']['output']>;
+  isonboardingcomplete: Maybe<Scalars['Boolean']['output']>;
   name: Maybe<Scalars['String']['output']>;
   password: Maybe<Scalars['String']['output']>;
   phoneNumber: Maybe<Scalars['String']['output']>;
   subscriptionExpirationDate: Maybe<Scalars['String']['output']>;
-  subscriptionType: Maybe<Scalars['String']['output']>;
+  subscriptiontype: Maybe<Scalars['String']['output']>;
 };
 
 export type UserInput = {
-  isOnboardingComplete: InputMaybe<Scalars['Boolean']['input']>;
+  isonboardingcomplete: InputMaybe<Scalars['Boolean']['input']>;
   name: InputMaybe<Scalars['String']['input']>;
   password: InputMaybe<Scalars['String']['input']>;
   phoneNumber: InputMaybe<Scalars['String']['input']>;
   subscriptionExpirationDate: InputMaybe<Scalars['String']['input']>;
+  subscriptiontype: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ChartDataType = {
+  date: Maybe<Scalars['String']['output']>;
+  value: Maybe<Scalars['Float']['output']>;
+};
+
+export type OnboadringType = {
+  cardBalance: InputMaybe<Scalars['Float']['input']>;
+  cardName: InputMaybe<Scalars['String']['input']>;
   subscriptionType: InputMaybe<Scalars['String']['input']>;
+};
+
+export type TransactionForChart = {
+  expense: Maybe<Array<Maybe<ChartDataType>>>;
+  income: Maybe<Array<Maybe<ChartDataType>>>;
 };

@@ -1,0 +1,12 @@
+query GetUserTransactionsForCharts {
+  transactionForChart {
+    income {
+      value
+      date
+    }
+    expense {
+      value
+      date
+    }
+  }
+}

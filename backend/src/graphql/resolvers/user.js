@@ -1,7 +1,7 @@
 const pool = require("../../db");
 const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
-const {encryptData, decryptData} = require('../../crypto')
+const { encryptData, decryptData } = require("../../crypto");
 
 const key = "e4po4mack";
 
@@ -18,10 +18,12 @@ const userResolver = {
   },
   user: async ({}, context) => {
     try {
-      const token = jwt.verify(context.authorization.replace("Bearer ", ""), key)
+      const token = jwt.verify(
+        context.authorization.replace("Bearer ", ""),
+        key
+      );
       const query = `SELECT * FROM users WHERE id = $1`; // Запрос к базе данных с параметром
       const { rows } = await pool.query(query, [token.id]);
-      console.log(rows)
       return rows[0]; // Возвращаем первую найденную запись
     } catch (error) {
       console.error("Error fetching user:", error);
@@ -40,13 +42,32 @@ const userResolver = {
       throw error;
     }
   },
-  onboardingUser: async ({ userData }) => {
+  onboardingUser: async ({ data }, context) => {
     try {
-      const token = authorizationHeader.replace("Bearer ", "")
-      const { subscriptionType, subscriptionExpirationDate } = userData;
+      const token = jwt.verify(
+        context.authorization.replace("Bearer ", ""),
+        key
+      );
+      const { subscriptionType, cardName, cardBalance } = data;
       const query =
-        "UPDATE users SET (subscriptionType, subscriptionExpirationDate) VALUES ($1, $2) WHERE id=$3 RETURNING id";
-      const { rows } = await pool.query(query, [subscriptionType, subscriptionExpirationDate, token]);
+        "UPDATE users SET subscriptiontype=$1, isonboardingcomplete=$2 WHERE id=$3 RETURNING id";
+      const createCard =
+        'INSERT INTO cards (userid, name, balance, iscredit, interestrate,  "limit", dischargedate) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id';
+
+      const { rows } = await pool.query(query, [
+        subscriptionType,
+        true,
+        token.id,
+      ]);
+      await pool.query(createCard, [
+        token.id,
+        cardName,
+        cardBalance,
+        false,
+        null,
+        null,
+        null,
+      ]);
       return "User comptlite onboarding";
     } catch (error) {
       console.error("Error creating user:", error);

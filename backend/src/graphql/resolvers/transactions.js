@@ -12,7 +12,6 @@ const transactionsResolver = {
       );
       const query = "SELECT * FROM transactions WHERE userId = $1";
       const { rows } = await pool.query(query, [token.id]);
-      console.log(rows);
       return rows;
     } catch (error) {
       console.error("Error creating user:", error);
@@ -47,7 +46,6 @@ const transactionsResolver = {
   },
   deleteTransaction: async ({ transactionId }) => {
     try {
-      console.log(transactionId);
       const query = "DELETE FROM transactions WHERE id=$1";
       const { rows } = await pool.query(query, [transactionId]);
       return "Удалено";

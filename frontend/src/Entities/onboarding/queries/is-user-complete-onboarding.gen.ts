@@ -9,13 +9,13 @@ const defaultOptions = {} as const;
 export type GetIsUserCompleteOnboardingQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetIsUserCompleteOnboardingQuery = { user: { isOnboardingComplete: boolean | null } | null };
+export type GetIsUserCompleteOnboardingQuery = { user: { isonboardingcomplete: boolean | null } | null };
 
 
 export const GetIsUserCompleteOnboardingDocument = gql`
     query GetIsUserCompleteOnboarding {
   user {
-    isOnboardingComplete
+    isonboardingcomplete
   }
 }
     `;

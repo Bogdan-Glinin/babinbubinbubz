@@ -1,0 +1,3 @@
+mutation CompliteOnboadringUser($data: onboadringType){
+    onboardingUser(data: $data)
+}

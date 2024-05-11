@@ -6,9 +6,9 @@ type User{
     name: String
     phoneNumber: String
     password: String
-    subscriptionType: String
+    subscriptiontype: String
     subscriptionExpirationDate: String
-    isOnboardingComplete: Boolean
+    isonboardingcomplete: Boolean
 }
 
 type Transactions{
@@ -34,13 +34,29 @@ type Cards{
     dischargedate: String
 }
 
+type chartDataType{
+    value: Float
+    date: String
+}
+
+type transactionForChart {
+    expense: [chartDataType]
+    income: [chartDataType]
+}
+
+input onboadringType{
+    subscriptionType: String
+    cardName: String
+    cardBalance: Float
+}
+
 input UserInput {
     name: String
     phoneNumber: String
     password: String
-    subscriptionType: String
+    subscriptiontype: String
     subscriptionExpirationDate: String
-    isOnboardingComplete: Boolean
+    isonboardingcomplete: Boolean
 }
 
 input TransactionInput{
@@ -70,11 +86,12 @@ type Query {
     token(phoneNumber: String! password:String!): String
     userTransactions: [Transactions]
     userCards: [Cards]
+    transactionForChart: transactionForChart
 }
 
 type Mutation {
     createUser(userData: UserInput): String
-    onboardingUser(userData: UserInput): String
+    onboardingUser(data: onboadringType): String
     createTransaction(transactionData: TransactionInput): String
     deleteTransaction(transactionId: ID): String
     updateTransaction(transactionData: TransactionInput): String

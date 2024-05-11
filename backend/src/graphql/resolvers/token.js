@@ -10,7 +10,6 @@ const tokenResolver = {
       const query =
         "SELECT * FROM users WHERE phoneNumber = $1 AND password = $2";
       const { rows } = await pool.query(query, [phoneNumber, password]);
-      console.log(rows)
       return jwt.sign({ id: rows[0].id }, key);
     } catch (error) {
       console.error("Error fetching users:", error);
