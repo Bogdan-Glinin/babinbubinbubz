@@ -9,7 +9,7 @@ const defaultOptions = {} as const;
 export type GetUserCardsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetUserCardsQuery = { userCards: Array<{ id: string | null, userid: string | null, name: string | null, balance: number | null, iscredit: boolean | null, interesrate: number | null, limit: number | null, dischargedate: string | null } | null> | null };
+export type GetUserCardsQuery = { userCards: Array<{ id: string | null, userid: string | null, name: string | null, balance: number | null, iscredit: boolean | null, interestrate: number | null, limit: number | null, dischargedate: string | null, minpayment: number | null } | null> | null };
 
 
 export const GetUserCardsDocument = gql`
@@ -20,9 +20,10 @@ export const GetUserCardsDocument = gql`
     name
     balance
     iscredit
-    interesrate
+    interestrate
     limit
     dischargedate
+    minpayment
   }
 }
     `;

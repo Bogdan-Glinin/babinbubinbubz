@@ -1,0 +1,9 @@
+query GetCreditCardIncomes($cardIds: [String]){
+    allCreditCardIncome(cardIds: $cardIds){
+       cardId
+       cardIncomes{
+        amount
+        date
+       }
+    }
+}

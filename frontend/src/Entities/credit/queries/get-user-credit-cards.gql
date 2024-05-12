@@ -1,13 +1,15 @@
-query GetUserCards {
-  userCards {
+query GetUerCreditCards {
+  userCreditCards {
     id
     userid
     name
     balance
-    iscredit
     interestrate
     limit
     dischargedate
     minpayment
+  }
+  user{
+    subscriptiontype
   }
 }

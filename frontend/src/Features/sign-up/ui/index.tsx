@@ -21,14 +21,20 @@ const SignUp = ({ onSignChange }: SignUpProps) => {
   const [passwordRepeatVisible, setPasswordRepeatVisible] = useState(false);
 
   const [createUser, { data, error }] = useCreateUserMutation();
-  
+
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
   useEffect(() => {
+    if(error){
+      message.error('Номер телефона занят')
+    }
     if (data?.createUser) {
       Cookies.set("token", data?.createUser);
     }
-  }, [data]);
+  }, [data, error]);
 
   const onSignUp = () => {
+    setIsButtonDisabled(true);
     try {
       validationSchema.validateSync(
         {
@@ -45,12 +51,12 @@ const SignUp = ({ onSignChange }: SignUpProps) => {
             name,
             phoneNumber: login,
             password: encryptData(password),
-            isOnboardingComplete: false,
+            isonboardingcomplete: false,
             subscriptionExpirationDate: "0",
-            subscriptionType: "base",
+            subscriptiontype: "base",
           },
         },
-      });
+      }).then(() => setIsButtonDisabled(false));
     } catch (error) {
       if (error instanceof ValidationError) {
         error.errors.map((e) => message.error(e));
@@ -80,8 +86,8 @@ const SignUp = ({ onSignChange }: SignUpProps) => {
       <StyledInput value={name} onChange={(e) => setName(e.target.value)} />
       <div>Номер телефона:</div>
       <StyledInput
-        value={formatPhoneNumber(login)}
-        onChange={(e) => setLogin(e.target.value)}
+        value={login}
+        onChange={(e) => setLogin(formatPhoneNumber(e.target.value))}
       />
       <div>Пароль:</div>
       <StyledPassword

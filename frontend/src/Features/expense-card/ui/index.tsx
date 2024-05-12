@@ -81,9 +81,10 @@ const ExpenseCard = ({
             (transactionAmount ? transactionAmount : 0),
           dischargedate: transactionCardData.dischargedate,
           id: transactionCardData.id,
-          interesrate: transactionCardData.interesrate,
+          interestrate: transactionCardData.interesrate,
           iscredit: transactionCardData.iscredit,
           limit: transactionCardData.limit,
+          minpayment: transactionCardData.minpayment,
         },
       },
       refetchQueries: [
@@ -134,7 +135,9 @@ const ExpenseCard = ({
           <div style={{ fontWeight: 600, marginBottom: "1vh" }}>{category}</div>
           <div>{name}</div>
           <div>{date}</div>
-          <div>{transactionCardData.name} -{amount ? amount.toString() : 0} руб</div>
+          <div>
+            {transactionCardData.name} -{amount ? amount.toString() : 0} руб
+          </div>
         </div>
       </div>
       <div style={{ marginLeft: "10vh" }}>

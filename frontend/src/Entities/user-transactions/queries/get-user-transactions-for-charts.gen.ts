@@ -6,15 +6,17 @@ import { Moment } from "moment"
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type GetUserTransactionsForChartsQueryVariables = Types.Exact<{ [key: string]: never; }>;
+export type GetUserTransactionsForChartsQueryVariables = Types.Exact<{
+  dataType: Types.InputMaybe<Types.Scalars['String']['input']>;
+}>;
 
 
 export type GetUserTransactionsForChartsQuery = { transactionForChart: { income: Array<{ value: number | null, date: string | null } | null> | null, expense: Array<{ value: number | null, date: string | null } | null> | null } | null };
 
 
 export const GetUserTransactionsForChartsDocument = gql`
-    query GetUserTransactionsForCharts {
-  transactionForChart {
+    query GetUserTransactionsForCharts($dataType: String) {
+  transactionForChart(dataType: $dataType) {
     income {
       value
       date
@@ -39,6 +41,7 @@ export const GetUserTransactionsForChartsDocument = gql`
  * @example
  * const { data, loading, error } = useGetUserTransactionsForChartsQuery({
  *   variables: {
+ *      dataType: // value for 'dataType'
  *   },
  * });
  */

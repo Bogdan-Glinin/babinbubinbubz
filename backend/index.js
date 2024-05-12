@@ -7,6 +7,7 @@ const userResolver = require("./src/graphql/resolvers/user");
 const tokenResolver = require("./src/graphql/resolvers/token");
 const transactionsResolver = require("./src/graphql/resolvers/transactions");
 const cardsResolver = require("./src/graphql/resolvers/cards");
+const creditCardsResolver = require("./src/graphql/resolvers/credit");
 const transactionsForChartResolver = require("./src/graphql/resolvers/transactions-for-charts");
 
 const app = express();
@@ -23,6 +24,7 @@ const root = {
   ...transactionsResolver,
   ...cardsResolver,
   ...transactionsForChartResolver,
+  ...creditCardsResolver,
 };
 
 app.use(

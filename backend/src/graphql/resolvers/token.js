@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const pool = require("../../db");
-const {encryptData, decryptData} = require('../../crypto')
+const { encryptData, decryptData } = require("../../crypto");
 
 const key = "e4po4mack";
 
@@ -10,6 +10,9 @@ const tokenResolver = {
       const query =
         "SELECT * FROM users WHERE phoneNumber = $1 AND password = $2";
       const { rows } = await pool.query(query, [phoneNumber, password]);
+      if (rows.length === 0) {
+        return new Error("Неверный логин или пароль");
+      }
       return jwt.sign({ id: rows[0].id }, key);
     } catch (error) {
       console.error("Error fetching users:", error);

@@ -6,37 +6,43 @@ import {
   Input,
   InputNumber,
   Modal,
+  Radio,
   Tooltip,
 } from "antd";
 import moment from "moment";
 import BaseCard from "../../../Shared/ui/base-card";
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EChartsReact from "echarts-for-react";
 import {
   GetUserCardsDocument,
   useGetUserCardsQuery,
 } from "../../../Entities/cards/queries/get-user-cards.gen";
 import { useCreateUserCardMutation } from "../../../Entities/cards/mutations/create-user-card.gen";
-import { useGetUserTransactionsForChartsQuery } from "../../../Entities/user-transactions/queries/get-user-transactions-for-charts.gen";
+import {
+  useGetUserTransactionsForChartsLazyQuery,
+  useGetUserTransactionsForChartsQuery,
+} from "../../../Entities/user-transactions/queries/get-user-transactions-for-charts.gen";
+import { theme } from "../../../Shared/config/themes";
 
-const RecommendationsCard = () => {
+const RecommendationsCard = ({transactionChartDateType, setTransactionChartDateType}: any) => {
   const [isAddCardMoadlOpen, setIsAddCardMoadlOpen] = useState(false);
   const [addCardName, setAddCardName] = useState("");
-  const [addCardBalance, setAddCardBalance] = useState<any>(null);
+  const [addCardBalance, setAddCardBalance] = useState<any>(0.0);
   const [addCardIsCredit, setAddCardIsCredit] = useState(false);
-  const [addCardInterestRate, setAddCardInterestRate] = useState<any>(null);
-  const [addCardLimit, setAddCardLimit] = useState<any>(null);
+  const [addCardInterestRate, setAddCardInterestRate] = useState<any>(0.0);
+  const [addCardLimit, setAddCardLimit] = useState<any>(0.0);
   const [addCardDischargeDate, setAddCardDischargeDate] = useState<any>();
+  const [minPayment, setMinPayment] = useState<any>(0.0);
 
   const { data: userCards } = useGetUserCardsQuery();
   const [createCard, {}] = useCreateUserCardMutation();
-  const { data: transactionsForCharts } =
-    useGetUserTransactionsForChartsQuery();
+  const [getTransactionsForChart, { data: transactionsForCharts }] =
+    useGetUserTransactionsForChartsLazyQuery();
 
   const staticsticExpenseoption = {
     title: {
-      text: "Расходы по месяцам",
+      text: "Расходы",
     },
     legend: {
       data: ["Расходы"],
@@ -68,7 +74,6 @@ const RecommendationsCard = () => {
     ],
     series: [
       {
-        name: "Расходы",
         type: "bar",
         data: transactionsForCharts?.transactionForChart?.expense?.map(
           (e: any) => e.value
@@ -79,7 +84,7 @@ const RecommendationsCard = () => {
 
   const staticsticIncomeOption = {
     title: {
-      text: "Доходы по месяцам",
+      text: "Доходы",
     },
     legend: {
       data: ["Расходы"],
@@ -120,6 +125,16 @@ const RecommendationsCard = () => {
     ],
   };
 
+  useEffect(() => {
+    if (transactionChartDateType) {
+      getTransactionsForChart({
+        variables: {
+          dataType: transactionChartDateType,
+        },
+      });
+    }
+  }, [transactionChartDateType]);
+
   const closeAddCardModal = () => {
     setIsAddCardMoadlOpen(false);
     setAddCardStateNull();
@@ -142,9 +157,10 @@ const RecommendationsCard = () => {
           name: addCardName,
           balance: +addCardBalance.toFixed(2),
           dischargedate: addCardDischargeDate,
-          interesrate: +addCardInterestRate.toFixed(2),
+          interestrate: +addCardInterestRate.toFixed(2),
           iscredit: addCardIsCredit,
           limit: +addCardLimit.toFixed(2),
+          minpayment: +minPayment.toFixed(2),
         },
       },
       refetchQueries: [
@@ -161,7 +177,9 @@ const RecommendationsCard = () => {
       <Title>Статистика и советы</Title>
       <div>
         <div style={{ fontWeight: 600, fontSize: 20 }}>Ваши счета</div>
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div
+          style={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}
+        >
           {userCards &&
             userCards?.userCards?.map((e) => (
               <div
@@ -218,6 +236,13 @@ const RecommendationsCard = () => {
                     onChange={(e) => setAddCardInterestRate(e)}
                     precision={2}
                   />
+                  <div>Процент минимального платежа</div>
+                  <InputNumber
+                    style={{ width: "100%" }}
+                    value={minPayment}
+                    onChange={(e) => setMinPayment(e)}
+                    precision={2}
+                  />
                   <div>Кредитный лимит</div>
                   <InputNumber
                     precision={2}
@@ -251,11 +276,23 @@ const RecommendationsCard = () => {
               <div>Ваш финансовый баланс в норме</div>
             )}
           </div> */}
+      <div style={{ fontWeight: 600, fontSize: 20 }}>
+        Ваши расходы и доходы
+      </div>
+      <Radio.Group
+        defaultValue={transactionChartDateType}
+        onChange={(e) => setTransactionChartDateType(e.target.value)}
+        style={{marginBottom: "1vh", marginTop: "1vh"}}
+      >
+        <Radio.Button value={"days"}>По дням</Radio.Button>
+        <Radio.Button value={"month"}>По месяцам</Radio.Button>
+        <Radio.Button value={"years"}>По годам</Radio.Button>
+      </Radio.Group>
       <div>
-        <EChartsReact option={staticsticExpenseoption} />
+        <EChartsReact theme={theme} option={staticsticExpenseoption} />
       </div>
       <div>
-        <EChartsReact option={staticsticIncomeOption} />
+        <EChartsReact theme={theme} option={staticsticIncomeOption} />
       </div>
     </Card>
   );
@@ -270,7 +307,10 @@ const Title = styled.div`
 `;
 
 const StyledBaseCard = styled(BaseCard)`
-  margin: 10px;
+  /* margin: 10px; */
+  margin-top: 2vh;
+  min-height: 127vh;
+  max-height: 140vh;
 `;
 
 const Card = styled(StyledBaseCard)`

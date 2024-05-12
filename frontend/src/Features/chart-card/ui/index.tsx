@@ -3,6 +3,8 @@ import EChartsReact from "echarts-for-react";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import BaseCard from "../../../Shared/ui/base-card";
+import "./style.css";
+import { theme } from "../../../Shared/config/themes";
 
 const ChartCard = ({ userTransactions, userCards }: any) => {
   const [totalExpense, setTotalExpense] = useState(0);
@@ -188,10 +190,10 @@ const ChartCard = ({ userTransactions, userCards }: any) => {
 
   return (
     <Card style={{ gridRow: "span 1", gridColumn: "span 1" }}>
-      <Carousel style={{ width: 500 }} arrows>
-        <div>
+      <Carousel style={{ width: "33vw", height: '100%' }} arrows>
+        <div style={{height: '100%'}}>
           <Title>График расходов</Title>
-          <EChartsReact option={expenseOption} />
+          <EChartsReact theme={theme} option={expenseOption} />
           <div>
             Всего расходов:{" "}
             <span style={{ fontWeight: 700 }}>{totalExpense}</span>Р
@@ -199,7 +201,7 @@ const ChartCard = ({ userTransactions, userCards }: any) => {
         </div>
         <div>
           <Title>График доходов</Title>
-          <EChartsReact option={incomeOptions} />
+          <EChartsReact theme={theme} option={incomeOptions} />
           <div>
             Всего доходов:{" "}
             <span style={{ fontWeight: 700 }}>{totalIncome}</span>Р
@@ -207,7 +209,7 @@ const ChartCard = ({ userTransactions, userCards }: any) => {
         </div>
         <div>
           <Title>График средств</Title>
-          <EChartsReact option={totalMoneyOption} />
+          <EChartsReact theme={theme} option={totalMoneyOption} />
           <div>
             Всего средств <Tooltip title="Без учета кредиток">*</Tooltip> :{" "}
             <span style={{ fontWeight: 700 }}>{totalMoney}</span>Р
@@ -227,10 +229,11 @@ const Title = styled.div`
 `;
 
 const StyledBaseCard = styled(BaseCard)`
-  margin: 10px;
+  margin: 2vh;
 `;
 
 const Card = styled(StyledBaseCard)`
   /* grid-row: span 1;
   grid-column: span 1;  */
+  /* height: 40vh; */
 `;

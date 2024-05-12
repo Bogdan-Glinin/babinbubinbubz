@@ -8,11 +8,15 @@ import TransactionCard from "../../Features/transaction-card/ui";
 import { useGetUserTransactionsQuery } from "../../Entities/user-transactions/queries/get-user-transations.gen";
 import BaseCard from "../../Shared/ui/base-card";
 import logo from "/dashboard-images/logo.png";
-import { UserOutlined } from "@ant-design/icons";
+import { AreaChartOutlined, UserOutlined } from "@ant-design/icons";
+import { useState } from "react";
 
 const Main = () => {
   const { data: userTransactions, loading } = useGetUserTransactionsQuery();
   const { data: userCards, loading: cardsLoading } = useGetUserCardsQuery();
+
+  const [transactionChartDateType, setTransactionChartDateType] =
+  useState("month");
 
   if (loading || cardsLoading) {
     return (
@@ -32,18 +36,29 @@ const Main = () => {
               <StyledSpan>Бабынбубынбуз Аналитикс</StyledSpan>
             </div>
           </div>
-          <Tooltip title="Профиль">
-            <Button type="text" style={{ marginRight: "1vw" }} href="/profile">
-              <UserOutlined style={{ fontSize: 32, color: "#fff" }} />
-            </Button>
-          </Tooltip>
+          <div>
+            <Tooltip title="Кредиты">
+              <Button type="text" href="/credit">
+                <AreaChartOutlined style={{ fontSize: 32, color: "#fff" }} />
+              </Button>
+            </Tooltip>
+            <Tooltip title="Профиль">
+              <Button
+                type="text"
+                style={{ marginRight: "1vw" }}
+                href="/profile"
+              >
+                <UserOutlined style={{ fontSize: 32, color: "#fff" }} />
+              </Button>
+            </Tooltip>
+          </div>
         </Header>
       </StyledBaseCard>
       <Onboarding />
       <Container>
         <ChartCard userTransactions={userTransactions} userCards={userCards} />
-        <RecommendationsCard />
-        <TransactionCard />
+        <RecommendationsCard transactionChartDateType={transactionChartDateType} setTransactionChartDateType={setTransactionChartDateType}/>
+        <TransactionCard transactionChartDateType={transactionChartDateType}/>
       </Container>
     </>
   );

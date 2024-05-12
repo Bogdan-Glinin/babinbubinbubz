@@ -6,16 +6,22 @@ import TransactionModal from "../../transaction-modal/ui";
 import ExpenseCard from "../../expense-card/ui";
 import IncomeCard from "../../income-card/ui";
 import { useState } from "react";
-import { GetUserTransactionsDocument, useGetUserTransactionsQuery } from "../../../Entities/user-transactions/queries/get-user-transations.gen";
+import {
+  GetUserTransactionsDocument,
+  useGetUserTransactionsQuery,
+} from "../../../Entities/user-transactions/queries/get-user-transations.gen";
 import { useCreateUserTransactionMutation } from "../../../Entities/user-transactions/mutations/create-user-transaction.gen";
 import { useDeleteUserTransactionMutation } from "../../../Entities/user-transactions/mutations/delete-user-transaction.gen";
 import { getCategoryIcon } from "../../transaction-modal/lib/get-category-icon";
 import moment from "moment";
 import { GetUserTransactionsForChartsDocument } from "../../../Entities/user-transactions/queries/get-user-transactions-for-charts.gen";
-import { GetUserCardsDocument, useGetUserCardsQuery } from "../../../Entities/cards/queries/get-user-cards.gen";
+import {
+  GetUserCardsDocument,
+  useGetUserCardsQuery,
+} from "../../../Entities/cards/queries/get-user-cards.gen";
 import { useUpdateUserCardMutation } from "../../../Entities/cards/mutations/update-user-card.gen";
 
-const TransactionCard = () => {
+const TransactionCard = ({ transactionChartDateType }: any) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [type, setType] = useState("expense");
   const [category, setCategory] = useState("");
@@ -68,6 +74,9 @@ const TransactionCard = () => {
         },
         {
           query: GetUserTransactionsForChartsDocument,
+          variables: {
+            dataType: transactionChartDateType,
+          },
         },
       ],
     });
@@ -81,9 +90,10 @@ const TransactionCard = () => {
             balance: +currentCard.balance.toFixed(2) - +amount.toFixed(2),
             name: currentCard.name,
             dischargedate: currentCard.dischargedate,
-            interesrate: currentCard.interesrate,
+            interestrate: currentCard.interestrate,
             iscredit: currentCard.iscredit,
             limit: currentCard.limit,
+            minpayment: currentCard.minpayment,
           },
         },
         refetchQueries: [
@@ -92,6 +102,9 @@ const TransactionCard = () => {
           },
           {
             query: GetUserTransactionsForChartsDocument,
+            variables: {
+              dataType: transactionChartDateType,
+            },
           },
         ],
       });
@@ -104,9 +117,10 @@ const TransactionCard = () => {
             balance: +currentCard.balance.toFixed(2) + +amount.toFixed(2),
             name: currentCard.name,
             dischargedate: currentCard.dischargedate,
-            interesrate: currentCard.interesrate,
+            interestrate: currentCard.interestrate,
             iscredit: currentCard.iscredit,
             limit: currentCard.limit,
+            minpayment: currentCard.minpayment,
           },
         },
         refetchQueries: [
@@ -131,6 +145,9 @@ const TransactionCard = () => {
         },
         {
           query: GetUserTransactionsForChartsDocument,
+          variables: {
+            dataType: transactionChartDateType,
+          },
         },
       ],
     });
@@ -148,10 +165,11 @@ const TransactionCard = () => {
               +currentTransaction.amount.toFixed(2),
             id: transactionCard.id,
             dischargedate: transactionCard.dischargedate,
-            interesrate: transactionCard.interesrate,
+            interestrate: transactionCard.interestrate,
             iscredit: transactionCard.iscredit,
             limit: transactionCard.limit,
             name: transactionCard.name,
+            minpayment: transactionCard.minpayment,
           },
         },
         refetchQueries: [
@@ -169,10 +187,11 @@ const TransactionCard = () => {
               currentTransaction.amount.toFixed(2),
             id: transactionCard.id,
             dischargedate: transactionCard.dischargedate,
-            interesrate: transactionCard.interesrate,
+            interestrate: transactionCard.interestrate,
             iscredit: transactionCard.iscredit,
             limit: transactionCard.limit,
             name: transactionCard.name,
+            minpayment: transactionCard.minpayment,
           },
         },
         refetchQueries: [
@@ -194,24 +213,16 @@ const TransactionCard = () => {
     setIsModalOpen(false);
   };
 
-
   return (
     <Card>
       <Title style={{ marginBottom: "2vh" }}>Операции</Title>
-      <div
-        style={{
-          position: "absolute",
-          bottom: "20px",
-          left: "50%",
-          transform: "translateX(-50%)",
-        }}
-      >
+      <AddTransactionButtonContainer>
         <Tooltip title="Добавить транзакцию">
           <Button onClick={() => setIsModalOpen(true)}>
             <PlusOutlined />
           </Button>
         </Tooltip>
-      </div>
+      </AddTransactionButtonContainer>
       <TransactionModal
         isModalOpen={isModalOpen}
         action={createUserTransaction}
@@ -304,11 +315,25 @@ const Title = styled.div`
 `;
 
 const StyledBaseCard = styled(BaseCard)`
-  margin: 10px;
+  margin-left: 2vh;
+  margin-right: 2vh;
 `;
 
 const Card = styled(StyledBaseCard)`
   /* grid-column: span 2;  */
+  height: 83vh;
   position: relative;
   overflow-y: auto;
+`;
+
+const AddTransactionButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2vh;
+  /* z-index: 1;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%); */
 `;

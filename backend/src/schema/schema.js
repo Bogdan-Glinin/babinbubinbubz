@@ -29,7 +29,8 @@ type Cards{
     name: String
     balance: Float
     iscredit: Boolean
-    interesrate: Float
+    interestrate: Float
+    minpayment: Float
     limit: Float
     dischargedate: String
 }
@@ -37,6 +38,15 @@ type Cards{
 type chartDataType{
     value: Float
     date: String
+}
+
+type creditCardIncomeChartData{
+    amount: Float
+    date: String
+}
+type creditCardIncome{
+    cardId: String
+    cardIncomes: [creditCardIncomeChartData]
 }
 
 type transactionForChart {
@@ -75,9 +85,10 @@ input CardInput{
     name: String
     balance: Float
     iscredit: Boolean
-    interesrate: Float
+    interestrate: Float
     limit: Float
     dischargedate: String
+    minpayment: Float
 }
 
 type Query {
@@ -86,7 +97,9 @@ type Query {
     token(phoneNumber: String! password:String!): String
     userTransactions: [Transactions]
     userCards: [Cards]
-    transactionForChart: transactionForChart
+    userCreditCards: [Cards]
+    transactionForChart(dataType: String): transactionForChart
+    allCreditCardIncome(cardIds: [String]): [creditCardIncome]
 }
 
 type Mutation {

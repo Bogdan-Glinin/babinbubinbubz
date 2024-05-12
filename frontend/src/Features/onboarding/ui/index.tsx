@@ -17,7 +17,7 @@ import { GetUserCardsDocument } from "../../../Entities/cards/queries/get-user-c
 
 const Onboarding = () => {
   const [isOnboardingModalOpen, setIsOnboardingModalOpen] = useState(false);
-  const [subscriptionType, setSubscriptionType] = useState("pro");
+  const [subscriptionType, setSubscriptionType] = useState("base");
   const [cardName, setCardName] = useState("");
   const [cardBalance, setCardBalance] = useState<any>(0);
   //   const [isCredit, setIsCredit] = useState(false);
@@ -72,10 +72,6 @@ const Onboarding = () => {
     {
       value: "base",
       label: "Базовая",
-    },
-    {
-      value: "pro",
-      label: "Продвинутая",
     },
     {
       value: "premium",

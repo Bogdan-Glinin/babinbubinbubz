@@ -33,6 +33,12 @@ const userResolver = {
   createUser: async ({ userData }) => {
     try {
       const { name, phoneNumber, password } = userData;
+      const checkIsUserExist = "SELECT phonenumber FROM users Where phonenumber=$1"
+      const {rows: check} = await pool.query(checkIsUserExist, [phoneNumber]);
+      console.log(check)
+      if(check.length){
+        return new Error('Пользователь уже существует')
+      }
       const query =
         "INSERT INTO users (name, phonenumber, password) VALUES ($1, $2, $3) RETURNING id";
       const { rows } = await pool.query(query, [name, phoneNumber, password]);

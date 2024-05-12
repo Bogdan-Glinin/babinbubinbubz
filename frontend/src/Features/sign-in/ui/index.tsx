@@ -7,29 +7,48 @@ import { Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 interface SignInProps {
-    onSignChange: () => void
+  onSignChange: () => void;
 }
 
-const SignIn = ({onSignChange}: SignInProps) => {
+const SignIn = ({ onSignChange }: SignInProps) => {
   const [getUserToken, { data, error }] = useGetUserTokenLazyQuery();
 
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
 
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
   const setCurrentUser = () => {
+    setIsButtonDisabled(true);
     getUserToken({
       variables: {
         phoneNumber: login,
         password: encryptData(password),
       },
-    });
+    }).then(() => setIsButtonDisabled(false));
+  };
+
+  const formatPhoneNumber = (phoneNumber: any) => {
+    const cleaned = ("" + phoneNumber).replace(/\D/g, "");
+
+    const match = cleaned.match(/^(\d{1})(\d{3})(\d{3})(\d{4})$/);
+
+    if (match) {
+      return "+7 (" + match[2] + ") " + match[3] + "-" + match[4];
+    }
+    return phoneNumber;
   };
 
   useEffect(() => {
+    if (error) {
+      message.error("Неверный логин или пароль");
+    }
     if (data?.token) {
       Cookies.set("token", data?.token);
     }
-  }, [data]);
+  }, [data, error]);
+
+  console.log(login);
 
   if (data?.token) {
     return <Navigate to="/main" replace />;
@@ -39,7 +58,10 @@ const SignIn = ({onSignChange}: SignInProps) => {
     <StyledContainer>
       <SyledTitle>Вход в систему</SyledTitle>
       <div>Номер телефона:</div>
-      <StyledInput value={login} onChange={(e) => setLogin(e.target.value)} />
+      <StyledInput
+        value={login}
+        onChange={(e) => setLogin(formatPhoneNumber(e.target.value))}
+      />
       <div>Пароль:</div>
       <StyledInput
         type="password"
@@ -50,6 +72,7 @@ const SignIn = ({onSignChange}: SignInProps) => {
         onClick={setCurrentUser}
         style={{ width: "100%", marginTop: "2vh", height: "40px" }}
         type="primary"
+        disabled={isButtonDisabled}
       >
         Войти
       </Button>

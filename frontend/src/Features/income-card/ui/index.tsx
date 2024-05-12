@@ -3,10 +3,7 @@ import {
   EditOutlined,
   MinusSquareOutlined,
 } from "@ant-design/icons";
-import {
-  Button,
-  Tooltip,
-} from "antd";
+import { Button, Tooltip } from "antd";
 import { GetUserTransactionsDocument } from "../../../Entities/user-transactions/queries/get-user-transations.gen";
 import { useUpdateUserTransactionMutation } from "../../../Entities/user-transactions/mutations/update-user-transaction.gen";
 import { useState } from "react";
@@ -25,9 +22,9 @@ interface IncomeProps {
   deleteTransaction: (cardid: string | null) => void;
   type: string | null;
   id: string | null;
-  cardid: string | null
-  selectCardOptions: any
-  transactionCardData: any
+  cardid: string | null;
+  selectCardOptions: any;
+  transactionCardData: any;
 }
 
 const IncomeCard = ({
@@ -41,7 +38,7 @@ const IncomeCard = ({
   id,
   cardid,
   selectCardOptions,
-  transactionCardData
+  transactionCardData,
 }: IncomeProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [transactionType, setType] = useState(type);
@@ -83,9 +80,10 @@ const IncomeCard = ({
             (transactionAmount ? transactionAmount : 0),
           dischargedate: transactionCardData.dischargedate,
           id: transactionCardData.id,
-          interesrate: transactionCardData.interesrate,
+          interestrate: transactionCardData.interesrate,
           iscredit: transactionCardData.iscredit,
           limit: transactionCardData.limit,
+          minpayment: transactionCardData.minpayment,
         },
       },
       refetchQueries: [
@@ -135,7 +133,9 @@ const IncomeCard = ({
         <div style={{ width: 190 }}>
           <div style={{ fontWeight: 600, marginBottom: "1vh" }}>{category}</div>
           <div>{date}</div>
-          <div>{transactionCardData.name} +{amount ? amount.toString() : 0} руб</div>
+          <div>
+            {transactionCardData.name} +{amount ? amount.toString() : 0} руб
+          </div>
         </div>
       </div>
       <div style={{ marginLeft: "10vh" }}>

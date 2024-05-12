@@ -21,9 +21,10 @@ export type CardInput = {
   balance: InputMaybe<Scalars['Float']['input']>;
   dischargedate: InputMaybe<Scalars['String']['input']>;
   id: InputMaybe<Scalars['ID']['input']>;
-  interesrate: InputMaybe<Scalars['Float']['input']>;
+  interestrate: InputMaybe<Scalars['Float']['input']>;
   iscredit: InputMaybe<Scalars['Boolean']['input']>;
   limit: InputMaybe<Scalars['Float']['input']>;
+  minpayment: InputMaybe<Scalars['Float']['input']>;
   name: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -31,9 +32,10 @@ export type Cards = {
   balance: Maybe<Scalars['Float']['output']>;
   dischargedate: Maybe<Scalars['String']['output']>;
   id: Maybe<Scalars['ID']['output']>;
-  interesrate: Maybe<Scalars['Float']['output']>;
+  interestrate: Maybe<Scalars['Float']['output']>;
   iscredit: Maybe<Scalars['Boolean']['output']>;
   limit: Maybe<Scalars['Float']['output']>;
+  minpayment: Maybe<Scalars['Float']['output']>;
   name: Maybe<Scalars['String']['output']>;
   userid: Maybe<Scalars['ID']['output']>;
 };
@@ -84,18 +86,30 @@ export type MutationUpdateTransactionArgs = {
 };
 
 export type Query = {
+  allCreditCardIncome: Maybe<Array<Maybe<CreditCardIncome>>>;
   allUsers: Maybe<Array<Maybe<User>>>;
   token: Maybe<Scalars['String']['output']>;
   transactionForChart: Maybe<TransactionForChart>;
   user: Maybe<User>;
   userCards: Maybe<Array<Maybe<Cards>>>;
+  userCreditCards: Maybe<Array<Maybe<Cards>>>;
   userTransactions: Maybe<Array<Maybe<Transactions>>>;
+};
+
+
+export type QueryAllCreditCardIncomeArgs = {
+  cardIds: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 
 export type QueryTokenArgs = {
   password: Scalars['String']['input'];
   phoneNumber: Scalars['String']['input'];
+};
+
+
+export type QueryTransactionForChartArgs = {
+  dataType: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TransactionInput = {
@@ -143,6 +157,16 @@ export type UserInput = {
 export type ChartDataType = {
   date: Maybe<Scalars['String']['output']>;
   value: Maybe<Scalars['Float']['output']>;
+};
+
+export type CreditCardIncome = {
+  cardId: Maybe<Scalars['String']['output']>;
+  cardIncomes: Maybe<Array<Maybe<CreditCardIncomeChartData>>>;
+};
+
+export type CreditCardIncomeChartData = {
+  amount: Maybe<Scalars['Float']['output']>;
+  date: Maybe<Scalars['String']['output']>;
 };
 
 export type OnboadringType = {

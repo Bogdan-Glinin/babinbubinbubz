@@ -1,5 +1,5 @@
-query GetUserTransactionsForCharts {
-  transactionForChart {
+query GetUserTransactionsForCharts($dataType: String) {
+  transactionForChart(dataType: $dataType) {
     income {
       value
       date
