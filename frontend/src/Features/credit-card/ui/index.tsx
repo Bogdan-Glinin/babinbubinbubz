@@ -32,7 +32,6 @@ const CreditCard = ({ element, creditCardIncomesData }: any) => {
   };
 
   const countMinPay = (card: any) => {
-    console.log(card.limit - card.balance);
     const minPay =
       (card.limit - card.balance) * (card.minpayment / 100) +
       countPercents(card);

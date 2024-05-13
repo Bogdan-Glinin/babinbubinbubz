@@ -42,17 +42,24 @@ export type Cards = {
 
 export type Mutation = {
   createCard: Maybe<Scalars['String']['output']>;
+  createCustomCategory: Maybe<Scalars['String']['output']>;
   createTransaction: Maybe<Scalars['String']['output']>;
   createUser: Maybe<Scalars['String']['output']>;
   deleteTransaction: Maybe<Scalars['String']['output']>;
   onboardingUser: Maybe<Scalars['String']['output']>;
   updateCard: Maybe<Scalars['String']['output']>;
+  updateCustomCategory: Maybe<Scalars['String']['output']>;
   updateTransaction: Maybe<Scalars['String']['output']>;
 };
 
 
 export type MutationCreateCardArgs = {
   cardData: InputMaybe<CardInput>;
+};
+
+
+export type MutationCreateCustomCategoryArgs = {
+  categoryData: InputMaybe<CustomCategoryInput>;
 };
 
 
@@ -81,6 +88,11 @@ export type MutationUpdateCardArgs = {
 };
 
 
+export type MutationUpdateCustomCategoryArgs = {
+  categoryData: InputMaybe<CustomCategoryInput>;
+};
+
+
 export type MutationUpdateTransactionArgs = {
   transactionData: InputMaybe<TransactionInput>;
 };
@@ -93,6 +105,7 @@ export type Query = {
   user: Maybe<User>;
   userCards: Maybe<Array<Maybe<Cards>>>;
   userCreditCards: Maybe<Array<Maybe<Cards>>>;
+  userCustomCategories: Maybe<Array<Maybe<CustomCategories>>>;
   userTransactions: Maybe<Array<Maybe<Transactions>>>;
 };
 
@@ -140,7 +153,7 @@ export type User = {
   isonboardingcomplete: Maybe<Scalars['Boolean']['output']>;
   name: Maybe<Scalars['String']['output']>;
   password: Maybe<Scalars['String']['output']>;
-  phoneNumber: Maybe<Scalars['String']['output']>;
+  phonenumber: Maybe<Scalars['String']['output']>;
   subscriptionExpirationDate: Maybe<Scalars['String']['output']>;
   subscriptiontype: Maybe<Scalars['String']['output']>;
 };
@@ -167,6 +180,20 @@ export type CreditCardIncome = {
 export type CreditCardIncomeChartData = {
   amount: Maybe<Scalars['Float']['output']>;
   date: Maybe<Scalars['String']['output']>;
+};
+
+export type CustomCategories = {
+  icon: Maybe<Scalars['String']['output']>;
+  id: Maybe<Scalars['ID']['output']>;
+  name: Maybe<Scalars['String']['output']>;
+  type: Maybe<Scalars['String']['output']>;
+  userid: Maybe<Scalars['ID']['output']>;
+};
+
+export type CustomCategoryInput = {
+  icon: InputMaybe<Scalars['String']['input']>;
+  name: InputMaybe<Scalars['String']['input']>;
+  type: InputMaybe<Scalars['String']['input']>;
 };
 
 export type OnboadringType = {

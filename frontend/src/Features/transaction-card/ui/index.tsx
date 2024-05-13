@@ -20,6 +20,7 @@ import {
   useGetUserCardsQuery,
 } from "../../../Entities/cards/queries/get-user-cards.gen";
 import { useUpdateUserCardMutation } from "../../../Entities/cards/mutations/update-user-card.gen";
+import { useGetUserCustomCategoriesQuery } from "../../../Entities/transaction-modal/queries/get-user-custom-categories.gen";
 
 const TransactionCard = ({ transactionChartDateType }: any) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,6 +35,7 @@ const TransactionCard = ({ transactionChartDateType }: any) => {
   const [deleteTransaction, {}] = useDeleteUserTransactionMutation();
   const { data: userCards } = useGetUserCardsQuery();
   const [updateCard, {}] = useUpdateUserCardMutation();
+  const { data: customCategories } = useGetUserCustomCategoriesQuery();
 
   const setStateNull = () => {
     setType("expense");
@@ -55,6 +57,9 @@ const TransactionCard = ({ transactionChartDateType }: any) => {
   };
 
   const createUserTransaction = () => {
+    console.log(
+      getCategoryIcon(category, customCategories?.userCustomCategories)
+    );
     createTransaction({
       variables: {
         transactionData: {
@@ -63,7 +68,10 @@ const TransactionCard = ({ transactionChartDateType }: any) => {
           name,
           amount: +amount.toFixed(2),
           type,
-          icon: getCategoryIcon(category),
+          icon: getCategoryIcon(
+            category,
+            customCategories?.userCustomCategories
+          ),
           date: moment().format("DD.MM.YYYY HH:mm"),
           cardid: card ? card : "",
         },
@@ -82,7 +90,6 @@ const TransactionCard = ({ transactionChartDateType }: any) => {
     });
     if (type === "expense") {
       const currentCard = findCard(userCards?.userCards);
-      console.log(currentCard.iscredit);
       updateCard({
         variables: {
           cardData: {
@@ -224,6 +231,7 @@ const TransactionCard = ({ transactionChartDateType }: any) => {
         </Tooltip>
       </AddTransactionButtonContainer>
       <TransactionModal
+        customCategories={customCategories}
         isModalOpen={isModalOpen}
         action={createUserTransaction}
         closeModal={closeModal}
@@ -245,6 +253,7 @@ const TransactionCard = ({ transactionChartDateType }: any) => {
           if (e?.type === "expense") {
             return (
               <ExpenseCard
+                customCategories={customCategories}
                 category={e.category}
                 name={e.name}
                 icon={e.icon}
@@ -266,6 +275,7 @@ const TransactionCard = ({ transactionChartDateType }: any) => {
           } else if (e?.type === "income") {
             return (
               <IncomeCard
+                customCategories={customCategories}
                 category={e.category}
                 name={e.name}
                 icon={e.icon}

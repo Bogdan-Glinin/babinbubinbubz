@@ -4,7 +4,7 @@ const schema = buildSchema(`
 type User{
     id: ID
     name: String
-    phoneNumber: String
+    phonenumber: String
     password: String
     subscriptiontype: String
     subscriptionExpirationDate: String
@@ -54,6 +54,20 @@ type transactionForChart {
     income: [chartDataType]
 }
 
+type customCategories{
+    id: ID
+    userid: ID
+    name: String
+    type: String
+    icon: String
+}
+
+input customCategoryInput{
+    name: String
+    type: String
+    icon: String
+}
+
 input onboadringType{
     subscriptionType: String
     cardName: String
@@ -100,6 +114,7 @@ type Query {
     userCreditCards: [Cards]
     transactionForChart(dataType: String): transactionForChart
     allCreditCardIncome(cardIds: [String]): [creditCardIncome]
+    userCustomCategories: [customCategories]
 }
 
 type Mutation {
@@ -110,6 +125,8 @@ type Mutation {
     updateTransaction(transactionData: TransactionInput): String
     createCard(cardData: CardInput): String
     updateCard(cardData: CardInput): String
+    updateCustomCategory(categoryData: customCategoryInput): String
+    createCustomCategory(categoryData: customCategoryInput): String
 }
 `);
 

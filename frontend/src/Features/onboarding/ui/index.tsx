@@ -33,10 +33,6 @@ const Onboarding = () => {
   const [compiteOnboarding, { data }] = useCompliteOnboadringUserMutation();
 
   const compliteOnboarding = () => {
-    // const percent =
-    //   ((creditLimit - balance) * (100 / interestRate)) /
-    //   (365 * (moment().diff(moment(selectedDate.dateString), "days") + 1));
-    // console.log(percent);
     compiteOnboarding({
       variables: {
         data: {
@@ -63,7 +59,6 @@ const Onboarding = () => {
 
   useEffect(() => {
     if (userData?.user) {
-      console.log(userData?.user);
       setIsOnboardingModalOpen(!userData?.user.isonboardingcomplete);
     }
   }, [userData]);

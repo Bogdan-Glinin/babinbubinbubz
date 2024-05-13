@@ -1,5 +1,6 @@
 import {
   CarOutlined,
+  DeleteOutlined,
   EditOutlined,
   MinusSquareOutlined,
 } from "@ant-design/icons";
@@ -26,9 +27,11 @@ interface ExpenseProps {
   cardid: string | null;
   selectCardOptions: any;
   transactionCardData: any;
+  customCategories: any
 }
 
 const ExpenseCard = ({
+  customCategories,
   category,
   deleteTransaction,
   icon,
@@ -59,7 +62,7 @@ const ExpenseCard = ({
           type: transactionType ? transactionType : "",
           category: transactionCategory ? transactionCategory : "",
           date: date ? date : "",
-          icon: getCategoryIcon(transactionCategory),
+          icon: getCategoryIcon(transactionCategory, customCategories?.userCustomCategories),
           id: id ? id : "",
           name: transactionName ? transactionName : "",
           cardid: cardid ? cardid : "",
@@ -143,7 +146,7 @@ const ExpenseCard = ({
       <div style={{ marginLeft: "10vh" }}>
         <Tooltip title="Удалить">
           <Button type="text" onClick={() => deleteTransaction(cardid)}>
-            <MinusSquareOutlined style={{ fontSize: 24 }} />
+          <DeleteOutlined style={{ fontSize: 24 }} />
           </Button>
         </Tooltip>
         <Tooltip title="Изменить">
@@ -158,6 +161,7 @@ const ExpenseCard = ({
         </Tooltip>
       </div>
       <TransactionModal
+       customCategories={customCategories}
         isModalOpen={isModalOpen}
         action={updateUserTransaction}
         closeModal={closeModal}

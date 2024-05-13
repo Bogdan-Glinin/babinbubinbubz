@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { CreditPage, DashboardPage, LoginPage, MainPage } from "../../Pages";
+import { CreditPage, DashboardPage, LoginPage, MainPage, ProfilePage } from "../../Pages";
 import PrivateRoute from "./../ui/private-route";
 
 export const routes = createBrowserRouter([
@@ -15,7 +15,7 @@ export const routes = createBrowserRouter([
   },
   {
     path: "/profile",
-    element: <PrivateRoute element={<div>Профиль</div>} />,
+    element: <PrivateRoute element={<ProfilePage />} />,
     errorElement: <div>Ошибка</div>,
   },
   {

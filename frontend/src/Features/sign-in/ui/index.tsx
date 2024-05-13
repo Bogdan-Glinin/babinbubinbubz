@@ -48,8 +48,6 @@ const SignIn = ({ onSignChange }: SignInProps) => {
     }
   }, [data, error]);
 
-  console.log(login);
-
   if (data?.token) {
     return <Navigate to="/main" replace />;
   }

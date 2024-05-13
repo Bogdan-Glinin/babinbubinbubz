@@ -1,0 +1,20 @@
+query GetUserData{
+    user{
+        name
+        phonenumber
+        subscriptiontype
+    }
+    userCards{
+        id
+        name
+        balance
+        limit
+        iscredit
+    }
+    userCustomCategories{
+        id
+        name
+        type
+        icon
+    }
+}

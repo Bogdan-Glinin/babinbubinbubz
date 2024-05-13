@@ -4,6 +4,7 @@ import StyledContainer from "../../Shared/ui/container";
 import styled from "styled-components";
 import logo from "/dashboard-images/logo.png";
 import EChartsReact from "echarts-for-react";
+import { theme } from "../../Shared/config/themes";
 
 const Dashboard = () => {
   const expenseOption = {
@@ -109,6 +110,7 @@ const Dashboard = () => {
             <div style={{ display: "flex", alignItems: "center" }}>
               <EChartsReact
                 option={expenseOption}
+                theme={theme}
                 style={{ height: 500, width: 500 }}
               />
               <div style={{ marginLeft: 50, fontSize: 24 }}>
@@ -129,11 +131,12 @@ const Dashboard = () => {
             </div>
             <EChartsReact
               option={incomeOption}
+              theme={theme}
               style={{ height: 500, width: 500 }}
             />
           </div>
         </BaseCard>
-        <BaseCard style={{ marginTop: 10 }}>
+        {/* <BaseCard style={{ marginTop: 10 }}>
           <Title>Избавьтесь от кредитов и кредиток</Title>
           <div style={{ display: "flex", alignItems: "center" }}>
             <div style={{ marginLeft: 50, fontSize: 24 }}>Писька</div>
@@ -142,7 +145,7 @@ const Dashboard = () => {
               style={{ height: 500, width: 500 }}
             />
           </div>
-        </BaseCard>
+        </BaseCard> */}
         <BaseCard style={{ marginTop: 10 }}>
           <Title>Подберите идеальный план для себя</Title>
           <div
@@ -160,21 +163,7 @@ const Dashboard = () => {
                 <div>1 дополнительная категория на доходы</div>
                 <div>Анализ ваших доходов и расходов</div>
               </div>
-              <div>
-                Бесплатно
-              </div>
-            </PriceCard>
-            <PriceCard>
-              <CardTitle>Продвинутый</CardTitle>
-              <div>
-                <div>Особенности:</div>
-                <div>Анализ ваших доходов и расходов</div>
-                <div>Любое количество дополнительных категорий на все</div>
-                <div>Помощь в закрытии одной кредитной карты</div>
-              </div>
-              <div>
-                500 руб.
-              </div>
+              <div>Бесплатно</div>
             </PriceCard>
             <PriceCard>
               <CardTitle>Премиум</CardTitle>
@@ -185,9 +174,7 @@ const Dashboard = () => {
                 <div>Помощь в закрытии всех кредитов</div>
                 <div>Рекомендации по управлению бюджетом</div>
               </div>
-              <div>
-                1200 руб.
-              </div>
+              <div>1200 руб.</div>
             </PriceCard>
           </div>
         </BaseCard>
@@ -234,16 +221,16 @@ const StyledSpan = styled.span`
 `;
 
 const PriceCard = styled.div`
-  background: linear-gradient(135deg, #FFA500, #6112e0);
+  background: linear-gradient(135deg, #ffa500, #6112e0);
   padding: 10px;
   border-radius: 10px;
   color: #f4f4f4;
   width: 400px;
   font-size: 18px;
-`
+`;
 
 const CardTitle = styled.div`
   font-size: 24px;
   font-weight: 600;
   text-decoration: underline;
-`
+`;

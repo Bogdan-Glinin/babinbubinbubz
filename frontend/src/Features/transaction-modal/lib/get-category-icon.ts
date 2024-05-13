@@ -1,4 +1,7 @@
-export const getCategoryIcon = (category: string | null) => {
+export const getCategoryIcon = (category: string | null, custom: any) => {
+  if (custom.length) {
+    return custom.find((obj: any) => obj.name === category).icon;
+  }
   switch (category) {
     case "Транспорт":
       return "car";

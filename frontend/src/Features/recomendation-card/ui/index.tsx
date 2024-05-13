@@ -256,7 +256,6 @@ const RecommendationsCard = ({transactionChartDateType, setTransactionChartDateT
                     style={{ width: "100%" }}
                     value={addCardDischargeDate}
                     onChange={(e) => {
-                      console.log(moment(e).format("DD.MM.YYYY"));
                       setAddCardDischargeDate(e);
                     }}
                   />

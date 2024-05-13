@@ -35,7 +35,6 @@ const userResolver = {
       const { name, phoneNumber, password } = userData;
       const checkIsUserExist = "SELECT phonenumber FROM users Where phonenumber=$1"
       const {rows: check} = await pool.query(checkIsUserExist, [phoneNumber]);
-      console.log(check)
       if(check.length){
         return new Error('Пользователь уже существует')
       }

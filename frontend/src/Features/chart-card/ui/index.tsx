@@ -137,7 +137,6 @@ const ChartCard = ({ userTransactions, userCards }: any) => {
       incomeOptions.series[0].data.map((e: any) => (totalIncome += e.value));
       setTotalIncome(totalIncome);
     }
-    console.log(totalMoneyOption);
     if (totalMoneyOption?.series[0]?.data) {
       totalMoneyOption.series[0].data.map((e: any) => (totalMoney += e.value));
       setTotalMoney(totalMoney);

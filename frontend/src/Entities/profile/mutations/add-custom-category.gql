@@ -1,0 +1,3 @@
+mutation AddCustomCategory($categoryData: customCategoryInput){
+    createCustomCategory(categoryData: $categoryData)
+}

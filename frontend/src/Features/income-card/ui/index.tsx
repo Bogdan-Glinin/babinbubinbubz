@@ -1,4 +1,5 @@
 import {
+  DeleteOutlined,
   DollarOutlined,
   EditOutlined,
   MinusSquareOutlined,
@@ -25,9 +26,11 @@ interface IncomeProps {
   cardid: string | null;
   selectCardOptions: any;
   transactionCardData: any;
+  customCategories: any
 }
 
 const IncomeCard = ({
+  customCategories,
   category,
   deleteTransaction,
   icon,
@@ -58,7 +61,7 @@ const IncomeCard = ({
           type: transactionType ? transactionType : "",
           category: transactionCategory ? transactionCategory : "",
           date: date ? date : "",
-          icon: getCategoryIcon(transactionCategory),
+          icon: getCategoryIcon(transactionCategory, customCategories?.userCustomCategories),
           id: id ? id : "",
           name: transactionName ? transactionName : "",
           cardid: cardid ? cardid : "",
@@ -141,7 +144,7 @@ const IncomeCard = ({
       <div style={{ marginLeft: "10vh" }}>
         <Tooltip title="Удалить">
           <Button type="text" onClick={() => deleteTransaction(cardid)}>
-            <MinusSquareOutlined style={{ fontSize: 24 }} />
+          <DeleteOutlined style={{ fontSize: 24 }} />
           </Button>
         </Tooltip>
         <Tooltip title="Изменить">
@@ -156,6 +159,7 @@ const IncomeCard = ({
         </Tooltip>
       </div>
       <TransactionModal
+      customCategories={customCategories}
         isModalOpen={isModalOpen}
         action={updateUserTransaction}
         closeModal={closeModal}

@@ -157,8 +157,6 @@ const transactionsForChartResolver = {
           break;
       }
 
-      console.log(expense, income);
-
       return { expense, income };
     } catch (error) {
       console.error("Error creating user:", error);

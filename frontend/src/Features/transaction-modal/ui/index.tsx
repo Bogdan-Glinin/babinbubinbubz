@@ -1,7 +1,10 @@
-import { Input, InputNumber, Modal, Radio, Select } from "antd";
-import { expenseOptions, incomeOptions } from "../lib/get-modal-options";
+import { Input, InputNumber, Modal, Radio, Select, Spin } from "antd";
+import { getExpenseOptions, getIncomeOptions } from "../lib/get-modal-options";
+import { useGetUserCustomCategoriesQuery } from "../../../Entities/transaction-modal/queries/get-user-custom-categories.gen";
+import { useEffect, useState } from "react";
 
 const TransactionModal = ({
+  customCategories,
   isModalOpen,
   action,
   closeModal,
@@ -16,8 +19,37 @@ const TransactionModal = ({
   selectCardOptions,
   card,
   setCard,
-  disabled
+  disabled,
 }: any) => {
+  const [incomeCustomCategories, setIncomeCustomCategory] = useState<any>(null);
+  const [expenseCustomCategories, setExpenseCustomCategory] =
+    useState<any>(null);
+
+  useEffect(() => {
+    let income: any = [];
+    let expense: any = [];
+    if (customCategories?.userCustomCategories) {
+      customCategories?.userCustomCategories?.map((e: any) => {
+        if (e?.type === "expense") {
+          expense.push({
+            value: e?.name,
+            label: e?.name,
+          });
+        } else {
+          income.push({
+            value: e?.name,
+            label: e?.name,
+          });
+        }
+      });
+      income.length === 0
+        ? setIncomeCustomCategory(null)
+        : setIncomeCustomCategory(income);
+      expense.length === 0
+        ? setExpenseCustomCategory(null)
+        : setExpenseCustomCategory(expense);
+    }
+  }, [customCategories]);
   return (
     <Modal
       open={isModalOpen}
@@ -34,15 +66,23 @@ const TransactionModal = ({
           setName("");
         }}
       >
-        <Radio.Button disabled={disabled} value="expense">Расход</Radio.Button>
-        <Radio.Button disabled={disabled} value="income">Доход</Radio.Button>
+        <Radio.Button disabled={disabled} value="expense">
+          Расход
+        </Radio.Button>
+        <Radio.Button disabled={disabled} value="income">
+          Доход
+        </Radio.Button>
       </Radio.Group>
       <div>Категория: </div>
       <Select
         style={{ width: "100%" }}
         value={transactionCategory}
         onChange={(e) => setCategory(e)}
-        options={transactionType === "expense" ? expenseOptions : incomeOptions}
+        options={
+          transactionType === "expense"
+            ? getExpenseOptions(expenseCustomCategories)
+            : getIncomeOptions(incomeCustomCategories)
+        }
       />
       {transactionType === "expense" ? (
         <div>Счет списания: </div>
@@ -50,7 +90,7 @@ const TransactionModal = ({
         <div>Счет начисления: </div>
       )}
       <Select
-      disabled={disabled}
+        disabled={disabled}
         style={{ width: "100%" }}
         options={selectCardOptions}
         value={card}
