@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import BaseCard from "../../../Shared/ui/base-card";
-import { Button, Tooltip } from "antd";
+import { Button, message, Tooltip } from "antd";
 import { FrownOutlined, PlusOutlined } from "@ant-design/icons";
 import TransactionModal from "../../transaction-modal/ui";
 import ExpenseCard from "../../expense-card/ui";
@@ -57,9 +57,6 @@ const TransactionCard = ({ transactionChartDateType }: any) => {
   };
 
   const createUserTransaction = () => {
-    console.log(
-      getCategoryIcon(category, customCategories?.userCustomCategories)
-    );
     createTransaction({
       variables: {
         transactionData: {
@@ -87,7 +84,7 @@ const TransactionCard = ({ transactionChartDateType }: any) => {
           },
         },
       ],
-    });
+    }).then(() => message.success("Операция добавлена"));
     if (type === "expense") {
       const currentCard = findCard(userCards?.userCards);
       updateCard({
@@ -157,7 +154,7 @@ const TransactionCard = ({ transactionChartDateType }: any) => {
           },
         },
       ],
-    });
+    }).then(() => message.success("Операция удалена"));
     const transactionCard = findCardTransaction(userCards?.userCards, cardid);
     const currentTransaction = findTransaction(
       userTransactions?.userTransactions,

@@ -16,7 +16,12 @@ const Login = () => {
   }
 
   return (
-    <div style={{width: '100vh', height: '100vh'}}>
+    <div
+      style={{
+        width: window.innerWidth > 769 ? "100vh" : "",
+        height: window.innerWidth > 769 ? "100vh" : "",
+      }}
+    >
       {isSignIn ? (
         <SignIn onSignChange={onSignChange} />
       ) : (

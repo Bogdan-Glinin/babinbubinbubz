@@ -2,16 +2,19 @@ import styled from "styled-components";
 import BaseCard from "../../Shared/ui/base-card";
 import StyledContainer from "../../Shared/ui/container";
 import logo from "/dashboard-images/logo.png";
-import { Button, Spin, Tooltip } from "antd";
+import { Button, Collapse, Spin, Tooltip } from "antd";
 import {
   FrownOutlined,
   PieChartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { useGetUerCreditCardsQuery } from "../../Entities/credit/queries/get-user-credit-cards.gen";
-import { useEffect } from "react";
+import { Children, useEffect } from "react";
 import { useGetCreditCardIncomesLazyQuery } from "../../Entities/credit/queries/get-credit-card-incomes.gen";
 import CreditCard from "../../Features/credit-card/ui";
+import { useGetUserRecomendationsQuery } from "../../Entities/recomendations/queries/get-user-recomendations.gen";
+import StyledContainerWithHTML from "../../Shared/ui/container-with-HTML";
+import CollapsePanel from "antd/es/collapse/CollapsePanel";
 
 const Credit = () => {
   const { data: userCreditCardsData, loading: userCreditCardsLoading } =
@@ -20,6 +23,8 @@ const Credit = () => {
     getCreditCardIncomesData,
     { data: creditCardIncomesData, loading: creditCardIncomesLoading },
   ] = useGetCreditCardIncomesLazyQuery();
+
+  const { data: recomendations, loading } = useGetUserRecomendationsQuery();
 
   useEffect(() => {
     if (userCreditCardsData?.userCreditCards) {
@@ -35,7 +40,7 @@ const Credit = () => {
     }
   }, [userCreditCardsData]);
 
-  if (userCreditCardsLoading || creditCardIncomesLoading) {
+  if (userCreditCardsLoading || creditCardIncomesLoading || loading) {
     return <Spin size="large" />;
   }
 
@@ -45,8 +50,10 @@ const Credit = () => {
         <Header>
           <div style={{ display: "flex", alignItems: "center" }}>
             <img src={logo} width={100} alt="" />
-            <div style={{ width: 700 }}>
-              <StyledSpan>Бабынбубынбуз Аналитикс</StyledSpan>
+            <div style={{ width: window.innerWidth > 769 ? 700 : 100 }}>
+              {window.innerWidth > 769 && (
+                <StyledSpan>Бабынбубынбуз Аналитикс</StyledSpan>
+              )}
             </div>
           </div>
           <div>
@@ -93,7 +100,7 @@ const Credit = () => {
                 </div>
               </BaseCard>
             </>
-          ) : userCreditCardsData?.userCreditCards ? (
+          ) : userCreditCardsData?.userCreditCards?.length ? (
             userCreditCardsData?.userCreditCards?.map((e: any) => {
               return (
                 <CreditCard
@@ -103,10 +110,36 @@ const Credit = () => {
               );
             })
           ) : (
-            ""
+            <BaseCard
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "92%",
+              }}
+            >
+              У вас нет кредитов и это прекрасно
+            </BaseCard>
           )}
         </AnalyticsBlock>
-        <RecomendationBlock>Рекомендации</RecomendationBlock>
+        <RecomendationBlock>
+          <div style={{ fontSize: 24, fontWeight: 600, marginBottom: "2vh" }}>
+            Полезные статьи
+          </div>
+          <Collapse>
+            {recomendations?.recomendations
+              ?.slice()
+              .reverse()
+              .map((e) => (
+                <CollapsePanel
+                  header={e?.title ? e?.title : ""}
+                  key={e?.title ? e?.title : ""}
+                >
+                  <StyledContainerWithHTML data={e?.content} />
+                </CollapsePanel>
+              ))}
+          </Collapse>
+        </RecomendationBlock>
       </MainBlock>
     </StyledContainer>
   );
@@ -149,7 +182,8 @@ const RecomendationBlock = styled(BaseCard)`
 `;
 
 const MainBlock = styled.div`
-  display: grid;
+  display: ${window.innerWidth > 769 ? "grid" : "flex"};
+  flex-direction: column;
   grid-template-columns: 2fr 1fr; /* Первый блок занимает 2/3, второй - 1/3 */
   grid-template-rows: 100%;
   gap: 1vh;

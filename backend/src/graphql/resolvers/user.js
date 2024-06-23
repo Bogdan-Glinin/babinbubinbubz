@@ -79,6 +79,31 @@ const userResolver = {
       throw error;
     }
   },
+  updateUser: async ({ userData }, context) => {
+    try {
+      const token = jwt.verify(
+        context.authorization.replace("Bearer ", ""),
+        key
+      );
+      const {
+        name,
+        phoneNumber,
+        subscriptiontype,
+      } = userData;
+      const query =
+        'UPDATE users SET name = $1, phonenumber = $2, subscriptionType = $3 WHERE id = $4 RETURNING id';
+      const { rows } = await pool.query(query, [
+        name,
+        phoneNumber,
+        subscriptiontype,
+        token.id
+      ]);
+      return "Обновлено";
+    } catch (error) {
+      console.error("Error creating user:", error);
+      throw error;
+    }
+  },
 };
 
 module.exports = userResolver;

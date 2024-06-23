@@ -5,11 +5,13 @@ import styled from "styled-components";
 import logo from "/dashboard-images/logo.png";
 import EChartsReact from "echarts-for-react";
 import { theme } from "../../Shared/config/themes";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
   const expenseOption = {
     tooltip: {
       trigger: "item",
+      position: "right",
     },
     // legend: {
     //   top: "5%",
@@ -19,7 +21,7 @@ const Dashboard = () => {
       {
         type: "pie",
         radius: ["40%", "70%"],
-        avoidLabelOverlap: false,
+        avoidLabelOverlap: true,
         itemStyle: {
           borderRadius: 10,
           borderColor: "#fff",
@@ -31,7 +33,7 @@ const Dashboard = () => {
         },
         emphasis: {
           label: {
-            show: true,
+            show: window.innerWidth > 769 ? true : false,
             fontSize: 40,
             fontWeight: "bold",
           },
@@ -52,6 +54,7 @@ const Dashboard = () => {
   const incomeOption = {
     tooltip: {
       trigger: "item",
+      position: "left",
     },
     // legend: {
     //   top: "5%",
@@ -73,7 +76,7 @@ const Dashboard = () => {
         },
         emphasis: {
           label: {
-            show: true,
+            show: window.innerWidth > 769 ? true : false,
             fontSize: 40,
             fontWeight: "bold",
           },
@@ -88,6 +91,23 @@ const Dashboard = () => {
       },
     ],
   };
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // Очистка эффекта
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  console.log(windowWidth);
   return (
     <>
       <StyledContainer>
@@ -95,8 +115,10 @@ const Dashboard = () => {
           <Header>
             <div style={{ display: "flex", alignItems: "center" }}>
               <img src={logo} width={100} alt="" />
-              <div style={{ width: 700 }}>
-                <StyledSpan>Бабынбубынбуз Аналитикс</StyledSpan>
+              <div style={{ width: window.innerWidth > 769 ? 700 : 100 }}>
+                {window.innerWidth > 769 && (
+                  <StyledSpan>Бабынбубынбуз Аналитикс</StyledSpan>
+                )}
               </div>
             </div>
             <Button href="/login" type="primary" style={{ width: 200 }}>
@@ -111,9 +133,17 @@ const Dashboard = () => {
               <EChartsReact
                 option={expenseOption}
                 theme={theme}
-                style={{ height: 500, width: 500 }}
+                style={{
+                  height: window.innerWidth > 769 ? 500 : 200,
+                  width: 500,
+                }}
               />
-              <div style={{ marginLeft: 50, fontSize: 24 }}>
+              <div
+                style={{
+                  marginLeft: 50,
+                  fontSize: window.innerWidth > 769 ? "24px" : "12px",
+                }}
+              >
                 Контролируйте свои финансы с помощью удобных графиков, списков{" "}
                 <br />
                 Вы можете добавлять все свои операции в систему, которая
@@ -125,14 +155,22 @@ const Dashboard = () => {
         <BaseCard style={{ marginTop: 10 }}>
           <Title>Кастомизируйте систему</Title>
           <div style={{ display: "flex", alignItems: "center" }}>
-            <div style={{ marginLeft: 50, fontSize: 24 }}>
+            <div
+              style={{
+                marginLeft: 50,
+                fontSize: window.innerWidth > 769 ? "24px" : "12px",
+              }}
+            >
               Для удобства Вы можете добавлять собственные категории для
               расходов и доходов
             </div>
             <EChartsReact
               option={incomeOption}
               theme={theme}
-              style={{ height: 500, width: 500 }}
+              style={{
+                height: window.innerWidth > 769 ? 500 : 200,
+                width: 500,
+              }}
             />
           </div>
         </BaseCard>
@@ -191,7 +229,7 @@ const StyledBaseCard = styled(BaseCard)`
 `;
 
 const Title = styled.div`
-  font-size: 32px;
+  font-size: ${window.innerWidth > 769 ? "32px" : "16px"};
   font-weight: 600;
   margin-left: 13vh;
   text-decoration: underline;
@@ -213,7 +251,7 @@ const Advantages = styled.div`
 
 const StyledSpan = styled.span`
   font-weight: 700;
-  font-size: 32px;
+  font-size: ${window.innerWidth > 769 ? "32px" : "16px"};
   letter-spacing: 2px;
   background: linear-gradient(135deg, #ff8a00, #e52e71);
   -webkit-background-clip: text;
@@ -225,12 +263,12 @@ const PriceCard = styled.div`
   padding: 10px;
   border-radius: 10px;
   color: #f4f4f4;
-  width: 400px;
-  font-size: 18px;
+  width: ${window.innerWidth > 769 ? "400px" : "150px"};
+  font-size: ${window.innerWidth > 769 ? "18px" : "12px"};
 `;
 
 const CardTitle = styled.div`
-  font-size: 24px;
+  font-size: ${window.innerWidth > 769 ? "24px" : "16px"};
   font-weight: 600;
   text-decoration: underline;
 `;

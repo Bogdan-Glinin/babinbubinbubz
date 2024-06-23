@@ -1,0 +1,3 @@
+mutation DeleteUserCard($cardId: String){
+    deleteCard(cardId: $cardId)
+}

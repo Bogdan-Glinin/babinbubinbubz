@@ -24,10 +24,17 @@ const cardsResolver = {
         context.authorization.replace("Bearer ", ""),
         key
       );
-      const { name, balance, iscredit, interestrate, limit, dischargedate } =
-        cardData;
+      const {
+        name,
+        balance,
+        iscredit,
+        interestrate,
+        limit,
+        dischargedate,
+        minpayment,
+      } = cardData;
       const query =
-        'INSERT INTO cards (userid, name, balance, iscredit, interestrate,  "limit", dischargedate) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id';
+        'INSERT INTO cards (userid, name, balance, iscredit, interestrate,  "limit", dischargedate, minpayment) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id';
       const { rows } = await pool.query(query, [
         token.id,
         name,
@@ -36,6 +43,7 @@ const cardsResolver = {
         interestrate,
         limit,
         dischargedate,
+        minpayment,
       ]);
       return rows[0].id;
     } catch (error) {
@@ -66,6 +74,26 @@ const cardsResolver = {
         id,
       ]);
       return "Обновлено";
+    } catch (error) {
+      console.error("Error creating user:", error);
+      throw error;
+    }
+  },
+  deleteCard: async ({ cardId }, context) => {
+    try {
+      const token = jwt.verify(
+        context.authorization.replace("Bearer ", ""),
+        key
+      );
+      const query = "DELETE FROM cards WHERE id = $1;";
+      const secondQuery =
+        "DELETE FROM transactions WHERE cardid=$1 AND userid=$2";
+      const { rows } = await pool.query(query, [cardId]);
+      const { rows: secondRows } = await pool.query(secondQuery, [
+        cardId,
+        token.id,
+      ]);
+      return "Карта удалена";
     } catch (error) {
       console.error("Error creating user:", error);
       throw error;

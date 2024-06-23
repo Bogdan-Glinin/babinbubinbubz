@@ -1,0 +1,3 @@
+mutation DeteleUserCategery($categoryId: String, $categoryName: String) {
+  deleteCustomCategory(categoryId: $categoryId, categoryName: $categoryName)
+}

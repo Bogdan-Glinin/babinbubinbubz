@@ -62,6 +62,11 @@ type customCategories{
     icon: String
 }
 
+type recomendations{
+    title: String
+    content: String
+}
+
 input customCategoryInput{
     name: String
     type: String
@@ -115,18 +120,22 @@ type Query {
     transactionForChart(dataType: String): transactionForChart
     allCreditCardIncome(cardIds: [String]): [creditCardIncome]
     userCustomCategories: [customCategories]
+    recomendations: [recomendations]
 }
 
 type Mutation {
     createUser(userData: UserInput): String
+    updateUser(userData: UserInput): String
     onboardingUser(data: onboadringType): String
     createTransaction(transactionData: TransactionInput): String
     deleteTransaction(transactionId: ID): String
     updateTransaction(transactionData: TransactionInput): String
     createCard(cardData: CardInput): String
     updateCard(cardData: CardInput): String
+    deleteCard(cardId: String): String
     updateCustomCategory(categoryData: customCategoryInput): String
     createCustomCategory(categoryData: customCategoryInput): String
+    deleteCustomCategory(categoryId: String categoryName: String): String
 }
 `);
 

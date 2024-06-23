@@ -34,6 +34,22 @@ const customCategoriesResolver = {
       throw error;
     }
   },
+  deleteCustomCategory: async ({categoryId, categoryName}, context) => {
+    try {
+      const token = jwt.verify(
+        context.authorization.replace("Bearer ", ""),
+        key
+      );
+      const query = "DELETE FROM customcategories WHERE id = $1;";
+      const secondQuery = "DELETE FROM transactions WHERE category=$1 AND userid=$2"
+      const { rows } = await pool.query(query, [categoryId]);
+      const { rows: secondRows } = await pool.query(secondQuery, [categoryName, token.id]);
+      return "Категория удалена";
+    } catch (error) {
+      console.error("Error creating user:", error);
+      throw error;
+    }
+  },
 };
 
 module.exports = customCategoriesResolver;

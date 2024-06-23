@@ -1,0 +1,6 @@
+query GetUserRecomendations{
+    recomendations{
+        title
+        content
+    }
+}

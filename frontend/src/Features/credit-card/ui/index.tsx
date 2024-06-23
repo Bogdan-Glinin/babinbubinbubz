@@ -12,6 +12,10 @@ const CreditCard = ({ element, creditCardIncomesData }: any) => {
       },
       yAxis: {
         type: "value",
+        axisLabel: {
+          fontSize: window.innerWidth > 769 ? 12 : 10,
+          rotate: window.innerWidth > 769 ? 0 : 45,
+        },
       },
       tooltip: {
         trigger: "axis",
@@ -50,11 +54,26 @@ const CreditCard = ({ element, creditCardIncomesData }: any) => {
       <div
         style={{
           display: "flex",
-          alignItems: "center",
-          height: "48vh",
+          flexDirection: window.innerWidth > 769 ? "row" : "column",
+          alignItems: window.innerWidth > 769 ? "center" : "",
+          height: window.innerWidth > 769 ? "48vh" : "100%",
+          marginTop: window.innerWidth > 769 ? "0" : "2vh",
         }}
       >
-        <div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-around",
+            height: window.innerWidth > 769 ? "70%" : "20vh",
+          }}
+        >
+          <div>Лимит: {element.limit.toFixed(2)} руб.</div>
+          <div>Баланс: {element.balance.toFixed(2)} руб.</div>
+          <div>
+            Задолженность:{" "}
+            {element.limit.toFixed(2) - element.balance.toFixed(2)} руб.
+          </div>
           <div>
             Проценты по кредитной карте: <br />
             {countPercents(element).toFixed(2)} руб.
@@ -64,12 +83,30 @@ const CreditCard = ({ element, creditCardIncomesData }: any) => {
             {countMinPay(element).toFixed(2)} руб.
           </div>
         </div>
-        <div style={{ width: "45vw" }}>
-          <div style={{ width: "100%", textAlign: "center" }}>
+        <div
+          style={{
+            width: window.innerWidth > 769 ? "45vw" : "95vw",
+            // paddingLeft: window.innerWidth > 769 ? "0" : "40px",
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              textAlign: "center",
+              marginTop: window.innerWidth > 769 ? "0" : "2vh",
+            }}
+          >
             График платежей по кредитной карте
           </div>
           {chartCard?.cardIncomes?.length ? (
-            <EChartsReact theme={theme} option={chartOptions} />
+            <EChartsReact
+              theme={theme}
+              option={chartOptions}
+              style={{
+                width: window.innerWidth > 769 ? "45vw" : "95vw",
+                paddingLeft: window.innerWidth > 769 ? "0" : "10px",
+              }}
+            />
           ) : (
             <div style={{ textAlign: "center" }}>
               У вас нет платежей по данной карте(

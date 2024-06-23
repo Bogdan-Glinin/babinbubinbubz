@@ -16,7 +16,7 @@ const Main = () => {
   const { data: userCards, loading: cardsLoading } = useGetUserCardsQuery();
 
   const [transactionChartDateType, setTransactionChartDateType] =
-  useState("month");
+    useState("month");
 
   if (loading || cardsLoading) {
     return (
@@ -32,8 +32,10 @@ const Main = () => {
         <Header>
           <div style={{ display: "flex", alignItems: "center" }}>
             <img src={logo} width={100} alt="" />
-            <div style={{ width: 700 }}>
-              <StyledSpan>Бабынбубынбуз Аналитикс</StyledSpan>
+            <div style={{ width: window.innerWidth > 769 ? 700 : 100 }}>
+              {window.innerWidth > 769 && (
+                <StyledSpan>Бабынбубынбуз Аналитикс</StyledSpan>
+              )}
             </div>
           </div>
           <div>
@@ -57,8 +59,13 @@ const Main = () => {
       <Onboarding />
       <Container>
         <ChartCard userTransactions={userTransactions} userCards={userCards} />
-        <RecommendationsCard transactionChartDateType={transactionChartDateType} setTransactionChartDateType={setTransactionChartDateType}/>
-        <TransactionCard transactionChartDateType={transactionChartDateType}/>
+        {window.innerWidth > 769 && (
+          <RecommendationsCard
+            transactionChartDateType={transactionChartDateType}
+            setTransactionChartDateType={setTransactionChartDateType}
+          />
+        )}
+        <TransactionCard transactionChartDateType={transactionChartDateType} />
       </Container>
     </>
   );
@@ -67,7 +74,8 @@ const Main = () => {
 export default Main;
 
 const Container = styled.div`
-  display: grid;
+  display: ${window.innerWidth > 769 ? "grid" : "flex"};
+  flex-direction: column;
   grid-template-columns: 1.5fr 3fr;
   grid-template-rows: 1fr 2fr;
   height: 100%;

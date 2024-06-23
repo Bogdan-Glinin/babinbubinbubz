@@ -45,11 +45,14 @@ export type Mutation = {
   createCustomCategory: Maybe<Scalars['String']['output']>;
   createTransaction: Maybe<Scalars['String']['output']>;
   createUser: Maybe<Scalars['String']['output']>;
+  deleteCard: Maybe<Scalars['String']['output']>;
+  deleteCustomCategory: Maybe<Scalars['String']['output']>;
   deleteTransaction: Maybe<Scalars['String']['output']>;
   onboardingUser: Maybe<Scalars['String']['output']>;
   updateCard: Maybe<Scalars['String']['output']>;
   updateCustomCategory: Maybe<Scalars['String']['output']>;
   updateTransaction: Maybe<Scalars['String']['output']>;
+  updateUser: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -70,6 +73,17 @@ export type MutationCreateTransactionArgs = {
 
 export type MutationCreateUserArgs = {
   userData: InputMaybe<UserInput>;
+};
+
+
+export type MutationDeleteCardArgs = {
+  cardId: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationDeleteCustomCategoryArgs = {
+  categoryId: InputMaybe<Scalars['String']['input']>;
+  categoryName: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -97,9 +111,15 @@ export type MutationUpdateTransactionArgs = {
   transactionData: InputMaybe<TransactionInput>;
 };
 
+
+export type MutationUpdateUserArgs = {
+  userData: InputMaybe<UserInput>;
+};
+
 export type Query = {
   allCreditCardIncome: Maybe<Array<Maybe<CreditCardIncome>>>;
   allUsers: Maybe<Array<Maybe<User>>>;
+  recomendations: Maybe<Array<Maybe<Recomendations>>>;
   token: Maybe<Scalars['String']['output']>;
   transactionForChart: Maybe<TransactionForChart>;
   user: Maybe<User>;
@@ -200,6 +220,11 @@ export type OnboadringType = {
   cardBalance: InputMaybe<Scalars['Float']['input']>;
   cardName: InputMaybe<Scalars['String']['input']>;
   subscriptionType: InputMaybe<Scalars['String']['input']>;
+};
+
+export type Recomendations = {
+  content: Maybe<Scalars['String']['output']>;
+  title: Maybe<Scalars['String']['output']>;
 };
 
 export type TransactionForChart = {

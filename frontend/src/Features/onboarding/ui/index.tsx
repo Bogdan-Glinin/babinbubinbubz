@@ -106,50 +106,6 @@ const Onboarding = () => {
         onChange={(e) => setCardBalance(e)}
         addonAfter={"₽"}
       />
-
-      {/* {subscriptionType === "premium" && (
-        <>
-          <div>Есть ли у вас кредитная карта?</div>
-          <Checkbox
-            value={isCredit}
-            onChange={(e: any) => setIsCredit(e.target.checked)}
-          >
-            Да
-          </Checkbox>
-          {isCredit && (
-            <>
-              <div>Укажаите кредитный лимит</div>
-              <InputNumber
-                value={creditLimit}
-                onChange={(e: any) => setCreditLimit(e)}
-                addonAfter={"₽"}
-              />
-              <div>Укажаите годовую проентную ставку</div>
-              <InputNumber
-                value={interestRate}
-                onChange={(e: any) => setInterestRate(e)}
-                addonAfter={"%"}
-              />
-              <div>Укажаите текущее количество денежных средств на карте</div>
-              <InputNumber
-                value={balance}
-                onChange={(e: any) => setbalance(e)}
-                addonAfter={"₽"}
-              />
-              <div>Укажаите беспроцентный период(в днях)</div>
-              <InputNumber
-                value={FreePeriod}
-                onChange={(e: any) => setFreePeriod(e)}
-              />
-              <div>Укажаите дату выписки</div>
-              <DatePicker
-                onChange={handleDateChange}
-                value={selectedDate ? selectedDate.date : null}
-              />
-            </>
-          )}
-        </>
-      )} */}
     </Modal>
   );
 };

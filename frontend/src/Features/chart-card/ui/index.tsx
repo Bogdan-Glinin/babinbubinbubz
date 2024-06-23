@@ -12,13 +12,25 @@ const ChartCard = ({ userTransactions, userCards }: any) => {
   const [totalMoney, setTotalMoney] = useState(0);
 
   const expenseOption = {
-    tooltip: {
-      trigger: "item",
-    },
-    legend: {
-      top: "5%",
-      left: "center",
-    },
+    tooltip:
+      window.innerWidth > 769
+        ? {
+            trigger: "item",
+          }
+        : {
+            trigger: "item",
+            position: "bottom",
+          },
+    legend:
+      window.innerWidth > 769
+        ? {
+            top: "5%",
+            left: "center",
+          }
+        : {
+            bottom: "0%",
+            left: "center",
+          },
     series: [
       {
         type: "pie",
@@ -35,7 +47,7 @@ const ChartCard = ({ userTransactions, userCards }: any) => {
         },
         emphasis: {
           label: {
-            show: true,
+            show: window.innerWidth > 769 ? true : false,
             fontSize: 40,
             fontWeight: "bold",
           },
@@ -69,13 +81,25 @@ const ChartCard = ({ userTransactions, userCards }: any) => {
   };
 
   const incomeOptions = {
-    tooltip: {
-      trigger: "item",
-    },
-    legend: {
-      top: "5%",
-      left: "center",
-    },
+    tooltip:
+      window.innerWidth > 769
+        ? {
+            trigger: "item",
+          }
+        : {
+            trigger: "item",
+            position: "bottom",
+          },
+    legend:
+      window.innerWidth > 769
+        ? {
+            top: "5%",
+            left: "center",
+          }
+        : {
+            bottom: "0%",
+            left: "center",
+          },
     series: [
       {
         type: "pie",
@@ -92,7 +116,7 @@ const ChartCard = ({ userTransactions, userCards }: any) => {
         },
         emphasis: {
           label: {
-            show: true,
+            show: window.innerWidth > 769 ? true : false,
             fontSize: 40,
             fontWeight: "bold",
           },
@@ -144,13 +168,25 @@ const ChartCard = ({ userTransactions, userCards }: any) => {
   }, [expenseOption, incomeOptions, totalMoney]);
 
   const totalMoneyOption = {
-    tooltip: {
-      trigger: "item",
-    },
-    legend: {
-      top: "5%",
-      left: "center",
-    },
+    tooltip:
+      window.innerWidth > 769
+        ? {
+            trigger: "item",
+          }
+        : {
+            trigger: "item",
+            position: "bottom",
+          },
+    legend:
+      window.innerWidth > 769
+        ? {
+            top: "5%",
+            left: "center",
+          }
+        : {
+            bottom: "0%",
+            left: "center",
+          },
     series: [
       {
         type: "pie",
@@ -167,7 +203,7 @@ const ChartCard = ({ userTransactions, userCards }: any) => {
         },
         emphasis: {
           label: {
-            show: true,
+            show: window.innerWidth > 769 ? true : false,
             fontSize: 40,
             fontWeight: "bold",
           },
@@ -189,29 +225,35 @@ const ChartCard = ({ userTransactions, userCards }: any) => {
 
   return (
     <Card style={{ gridRow: "span 1", gridColumn: "span 1" }}>
-      <Carousel style={{ width: "33vw", height: '100%' }} arrows>
-        <div style={{height: '100%'}}>
+      <Carousel
+        style={{
+          width: window.innerWidth > 769 ? "33vw" : "100%",
+          height: "100%",
+        }}
+        arrows
+      >
+        <div style={{ height: "100%" }}>
           <Title>График расходов</Title>
           <EChartsReact theme={theme} option={expenseOption} />
-          <div>
+          <div style={{ marginBottom: "2vh" }}>
             Всего расходов:{" "}
-            <span style={{ fontWeight: 700 }}>{totalExpense}</span>Р
+            <span style={{ fontWeight: 700 }}>{totalExpense.toFixed(2)}</span>Р
           </div>
         </div>
         <div>
           <Title>График доходов</Title>
           <EChartsReact theme={theme} option={incomeOptions} />
-          <div>
+          <div style={{ marginBottom: "2vh" }}>
             Всего доходов:{" "}
-            <span style={{ fontWeight: 700 }}>{totalIncome}</span>Р
+            <span style={{ fontWeight: 700 }}>{totalIncome.toFixed(2)}</span>Р
           </div>
         </div>
         <div>
           <Title>График средств</Title>
           <EChartsReact theme={theme} option={totalMoneyOption} />
-          <div>
+          <div style={{ marginBottom: "2vh" }}>
             Всего средств <Tooltip title="Без учета кредиток">*</Tooltip> :{" "}
-            <span style={{ fontWeight: 700 }}>{totalMoney}</span>Р
+            <span style={{ fontWeight: 700 }}>{totalMoney.toFixed(2)}</span>Р
           </div>
         </div>
       </Carousel>

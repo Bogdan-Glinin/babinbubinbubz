@@ -23,5 +23,4 @@ export default App;
 const StyledLayout = styled.div`
   background-color: #e4e4e4;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
-  width: 100vw;
 `;

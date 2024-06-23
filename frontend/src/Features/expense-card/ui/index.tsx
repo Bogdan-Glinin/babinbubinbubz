@@ -4,7 +4,7 @@ import {
   EditOutlined,
   MinusSquareOutlined,
 } from "@ant-design/icons";
-import { Button, Tooltip } from "antd";
+import { Button, message, Tooltip } from "antd";
 import { useState } from "react";
 import { useUpdateUserTransactionMutation } from "../../../Entities/user-transactions/mutations/update-user-transaction.gen";
 import { GetUserTransactionsDocument } from "../../../Entities/user-transactions/queries/get-user-transations.gen";
@@ -27,7 +27,7 @@ interface ExpenseProps {
   cardid: string | null;
   selectCardOptions: any;
   transactionCardData: any;
-  customCategories: any
+  customCategories: any;
 }
 
 const ExpenseCard = ({
@@ -62,7 +62,10 @@ const ExpenseCard = ({
           type: transactionType ? transactionType : "",
           category: transactionCategory ? transactionCategory : "",
           date: date ? date : "",
-          icon: getCategoryIcon(transactionCategory, customCategories?.userCustomCategories),
+          icon: getCategoryIcon(
+            transactionCategory,
+            customCategories?.userCustomCategories
+          ),
           id: id ? id : "",
           name: transactionName ? transactionName : "",
           cardid: cardid ? cardid : "",
@@ -73,7 +76,7 @@ const ExpenseCard = ({
           query: GetUserTransactionsDocument,
         },
       ],
-    });
+    }).then(() => message.success("Расход обновлен"));
     updateCard({
       variables: {
         cardData: {
@@ -143,10 +146,10 @@ const ExpenseCard = ({
           </div>
         </div>
       </div>
-      <div style={{ marginLeft: "10vh" }}>
+      <div style={{ marginLeft: window.innerWidth > 769 ? "10vh" : "1vh" }}>
         <Tooltip title="Удалить">
           <Button type="text" onClick={() => deleteTransaction(cardid)}>
-          <DeleteOutlined style={{ fontSize: 24 }} />
+            <DeleteOutlined style={{ fontSize: 24 }} />
           </Button>
         </Tooltip>
         <Tooltip title="Изменить">
@@ -161,7 +164,7 @@ const ExpenseCard = ({
         </Tooltip>
       </div>
       <TransactionModal
-       customCategories={customCategories}
+        customCategories={customCategories}
         isModalOpen={isModalOpen}
         action={updateUserTransaction}
         closeModal={closeModal}

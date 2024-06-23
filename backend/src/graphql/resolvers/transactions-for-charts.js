@@ -22,7 +22,9 @@ const getExpensesByMonth = (data) => {
     }
   });
 
-  return expensesByMonth;
+  return expensesByMonth.sort((a, b) => {
+    return moment(a.date, "MM.YYYY").isBefore(moment(b.date, "MM.YYYY")) ? -1 : 1;
+  });;
 };
 
 const getIncomesByMonth = (data) => {
@@ -43,7 +45,9 @@ const getIncomesByMonth = (data) => {
     }
   });
 
-  return incomesByMonth;
+  return incomesByMonth.sort((a, b) => {
+    return moment(a.date, "MM.YYYY").isBefore(moment(b.date, "MM.YYYY")) ? -1 : 1;
+  });;
 };
 
 const getExpensesByDays = (data) => {
@@ -64,7 +68,9 @@ const getExpensesByDays = (data) => {
     }
   });
 
-  return expensesByMonth;
+  return expensesByMonth.sort((a, b) => {
+    return moment(a.date, "DD.MM.YYYY").isBefore(moment(b.date, "DD.MM.YYYY")) ? -1 : 1;
+  });;
 };
 
 const getIncomesByYears = (data) => {
@@ -85,7 +91,9 @@ const getIncomesByYears = (data) => {
     }
   });
 
-  return incomesByMonth;
+  return incomesByMonth.sort((a, b) => {
+    return moment(a.date, "YYYY").isBefore(moment(b.date, "YYYY")) ? -1 : 1;
+  });
 };
 const getExpensesByYears = (data) => {
   const expensesByMonth = [];
@@ -105,7 +113,9 @@ const getExpensesByYears = (data) => {
     }
   });
 
-  return expensesByMonth;
+  return expensesByMonth.sort((a, b) => {
+    return moment(a.date, "YYYY").isBefore(moment(b.date, "YYYY")) ? -1 : 1;
+  });
 };
 
 const getIncomesByDays = (data) => {
@@ -126,7 +136,9 @@ const getIncomesByDays = (data) => {
     }
   });
 
-  return incomesByMonth;
+  return incomesByMonth.sort((a, b) => {
+    return moment(a.date, "DD.MM.YYYY").isBefore(moment(b.date, "DD.MM.YYYY")) ? -1 : 1;
+  });;;
 };
 
 const transactionsForChartResolver = {

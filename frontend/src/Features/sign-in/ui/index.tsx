@@ -16,6 +16,8 @@ const SignIn = ({ onSignChange }: SignInProps) => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
 
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const setCurrentUser = () => {
@@ -61,10 +63,14 @@ const SignIn = ({ onSignChange }: SignInProps) => {
         onChange={(e) => setLogin(formatPhoneNumber(e.target.value))}
       />
       <div>Пароль:</div>
-      <StyledInput
+      <StyledPassword
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        visibilityToggle={{
+          visible: passwordVisible,
+          onVisibleChange: setPasswordVisible,
+        }}
       />
       <Button
         onClick={setCurrentUser}
@@ -106,6 +112,10 @@ const SyledTitle = styled.div`
 `;
 
 const StyledInput = styled(Input)`
+  margin-bottom: 20px;
+`;
+
+const StyledPassword = styled(Input.Password)`
   margin-bottom: 20px;
 `;
 

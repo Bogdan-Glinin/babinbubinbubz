@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const pool = require("../../db");
+const moment = require("moment")
 
 const key = "e4po4mack";
 
@@ -12,7 +13,9 @@ const transactionsResolver = {
       );
       const query = "SELECT * FROM transactions WHERE userId = $1";
       const { rows } = await pool.query(query, [token.id]);
-      return rows;
+      return rows.sort((a, b) => {
+        return moment(a.date, "DD.MM.YYYY HH.mm").isBefore(moment(b.date, "DD.MM.YYYY HH.mm")) ? 1 : -1;
+      })
     } catch (error) {
       console.error("Error creating user:", error);
       throw error;

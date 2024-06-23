@@ -1,7 +1,11 @@
-import { Input, InputNumber, Modal, Radio, Select, Spin } from "antd";
+import { Input, InputNumber, message, Modal, Radio, Select, Spin } from "antd";
 import { getExpenseOptions, getIncomeOptions } from "../lib/get-modal-options";
-import { useGetUserCustomCategoriesQuery } from "../../../Entities/transaction-modal/queries/get-user-custom-categories.gen";
 import { useEffect, useState } from "react";
+import {
+  expenseValidation,
+  incomeValidation,
+} from "../lib/valitadte-transaction-modal";
+import { ValidationError } from "yup";
 
 const TransactionModal = ({
   customCategories,
@@ -24,6 +28,46 @@ const TransactionModal = ({
   const [incomeCustomCategories, setIncomeCustomCategory] = useState<any>(null);
   const [expenseCustomCategories, setExpenseCustomCategory] =
     useState<any>(null);
+
+  const compliteModal = () => {
+    if (transactionType === "expense") {
+      try {
+        expenseValidation.validateSync(
+          {
+            transactionCategory,
+            transactionType,
+            card,
+            transactionName,
+            transactionAmount,
+          },
+          { abortEarly: false }
+        );
+        action()
+      } catch (error) {
+        if (error instanceof ValidationError) {
+          error.errors.map((e) => message.error(e));
+        }
+      }
+    } else {
+      try {
+        incomeValidation.validateSync(
+          {
+            transactionCategory,
+            transactionType,
+            card,
+            transactionName,
+            transactionAmount,
+          },
+          { abortEarly: false }
+        );
+        action();
+      } catch (error) {
+        if (error instanceof ValidationError) {
+          error.errors.map((e) => message.error(e));
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     let income: any = [];
@@ -53,7 +97,7 @@ const TransactionModal = ({
   return (
     <Modal
       open={isModalOpen}
-      onOk={action}
+      onOk={compliteModal}
       onCancel={closeModal}
       title="Добавление транзакции"
     >

@@ -53,7 +53,6 @@ const RecommendationsCard = ({transactionChartDateType, setTransactionChartDateT
     toolbox: {
       show: true,
       feature: {
-        dataView: { show: true, readOnly: false },
         magicType: { show: true, type: ["line", "bar"] },
         restore: { show: false },
         saveAsImage: { show: true },
@@ -76,7 +75,7 @@ const RecommendationsCard = ({transactionChartDateType, setTransactionChartDateT
       {
         type: "bar",
         data: transactionsForCharts?.transactionForChart?.expense?.map(
-          (e: any) => e.value
+          (e: any) => e.value.toFixed(2)
         ),
       },
     ],
@@ -95,7 +94,6 @@ const RecommendationsCard = ({transactionChartDateType, setTransactionChartDateT
     toolbox: {
       show: true,
       feature: {
-        dataView: { show: true, readOnly: false },
         magicType: { show: true, type: ["line", "bar"] },
         restore: { show: false },
         saveAsImage: { show: true },
@@ -119,7 +117,7 @@ const RecommendationsCard = ({transactionChartDateType, setTransactionChartDateT
         name: "Доходы",
         type: "bar",
         data: transactionsForCharts?.transactionForChart?.income?.map(
-          (e: any) => e.value
+          (e: any) => e.value.toFixed(2)
         ),
       },
     ],
@@ -174,7 +172,7 @@ const RecommendationsCard = ({transactionChartDateType, setTransactionChartDateT
 
   return (
     <Card>
-      <Title>Статистика и советы</Title>
+      <Title>Статистика</Title>
       <div>
         <div style={{ fontWeight: 600, fontSize: 20 }}>Ваши счета</div>
         <div
@@ -191,7 +189,7 @@ const RecommendationsCard = ({transactionChartDateType, setTransactionChartDateT
                 }}
               >
                 <div>{e?.name}</div>
-                <div>{e?.balance} руб.</div>
+                <div>{e?.balance?.toFixed(2)} руб.</div>
               </div>
             ))}
           <div>
@@ -217,6 +215,7 @@ const RecommendationsCard = ({transactionChartDateType, setTransactionChartDateT
               <InputNumber
                 style={{ width: "100%" }}
                 value={addCardBalance}
+                addonAfter={"₽"}
                 onChange={(e) => setAddCardBalance(e)}
                 precision={2}
               />
@@ -235,6 +234,7 @@ const RecommendationsCard = ({transactionChartDateType, setTransactionChartDateT
                     value={addCardInterestRate}
                     onChange={(e) => setAddCardInterestRate(e)}
                     precision={2}
+                    addonAfter={"%"}
                   />
                   <div>Процент минимального платежа</div>
                   <InputNumber
@@ -242,6 +242,7 @@ const RecommendationsCard = ({transactionChartDateType, setTransactionChartDateT
                     value={minPayment}
                     onChange={(e) => setMinPayment(e)}
                     precision={2}
+                    addonAfter={"%"}
                   />
                   <div>Кредитный лимит</div>
                   <InputNumber
@@ -249,6 +250,7 @@ const RecommendationsCard = ({transactionChartDateType, setTransactionChartDateT
                     style={{ width: "100%" }}
                     value={addCardLimit}
                     onChange={(e) => setAddCardLimit(e)}
+                    addonAfter={"₽"}
                   />
                   <div>Дата выписки</div>
                   <DatePicker
